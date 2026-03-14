@@ -1,9 +1,11 @@
-package generator
+package internal
 
 import (
     "os"
     "fmt"
     "encoding/json"
+    "strings"
+    "io/fs"
     "path/filepath"
     "text/template"
 )
@@ -86,4 +88,46 @@ func GenerateProject(ctx Context) error {
     }
 
     return nil
+}
+
+func GenerateManifest(selections []string, outputPath string) error {
+    manifest := Manifest{Files: make(map[string]string)}
+
+    for _, sel := range selections {
+        templateDir := filepath.Join("templates/test", sel)
+
+        err := filepath.WalkDir(templateDir, func(path string, d fs.DirEntry, err error) error {
+            if err != nil {
+                return err
+            }
+            if d.IsDir() {
+                return nil
+            }
+            if !strings.HasSuffix(path, ".tmpl") {
+                return nil
+            }
+
+            rel, err := filepath.Rel(templateDir, path)
+            if err != nil {
+                return err
+            }
+
+            dest := strings.TrimSuffix(rel, ".tmpl")
+            manifest.Files[path] = dest
+            return nil
+        })
+
+        if err != nil {
+            return err
+        }
+    }
+
+    // Convert manifest to JSON
+    data, err := json.MarshalIndent(manifest, "", "  ")
+    if err != nil {
+        return err
+    }
+
+    // Write manifest.json to the output path
+    return os.WriteFile(outputPath, data, 0644)
 }
