@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-
 	// 	tea "charm.land/bubbletea/v2"
 	"StartMeow/queue"
+	"os/exec"
 )
 
 func usage(){
@@ -28,4 +28,14 @@ func main() {
 	q.Dequeue()
 	fmt.Println("After", q)
 
+
+	cmd := exec.Command("git", "branch", "--show-current")
+	stdout, err := cmd.Output()
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	fmt.Println(string(stdout))
 }
