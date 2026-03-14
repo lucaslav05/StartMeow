@@ -7,6 +7,7 @@ type FrontLang int
 type MobileLang int
 type UserInterface int
 type PromptType int
+type Database int
 
 const (
 	WebApp ProjectType = iota
@@ -55,6 +56,12 @@ const (
 	Info
 )
 
+const (
+	MongoDB Database = iota
+	Firebase
+	SQLite
+)
+
 type Project struct {
 	projType   ProjectType
 	framework  Framework
@@ -62,6 +69,7 @@ type Project struct {
 	language   Language
 	mobileLang MobileLang
 	ui         UserInterface
+	database   Database
 	projName   string
 	filePath   string
 }
