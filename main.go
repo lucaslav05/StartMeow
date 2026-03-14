@@ -2,43 +2,30 @@ package main
 
 import (
 	"fmt"
-	"os"
 
-// 	tea "charm.land/bubbletea/v2"
-	"StartMeow/generator"
+	// 	tea "charm.land/bubbletea/v2"
+	"StartMeow/queue"
 )
 
 func usage(){
     fmt.Println("Usage: StartMeow <project-name> [--force]")
-    return
 }
 
 func main() {
-// 	fmt.Println("Hello, World!")
-	if len(os.Args) < 2 {
-	    usage()
-	    return
+	q := queue.Queue {
+		List: make([]any, 0),
 	}
 
-    projectName := os.Args[1]
-    force := false
+	q.Enqueue("1")
+	q.Enqueue("2")
+	q.Enqueue("3")
+	q.Enqueue("4")
 
-    // Check for --force flag
-    if len(os.Args) > 2 && os.Args[2] == "--force" {
-        force = true
-    }
+	fmt.Println("Initial", q)
 
-    ctx := generator.Context{
-        ProjectName: projectName,
-        Force: force,
-    }
 
-    fmt.Println("Generating barebones webapp: ", projectName)
+	q.Dequeue()
+	q.Dequeue()
+	fmt.Println("After", q)
 
-    if err := generator.GenerateWebapp(ctx); err != nil {
-        fmt.Println("Error: ", err)
-        return
-    }
-
-    fmt.Println(projectName, " is ready!")
 }
