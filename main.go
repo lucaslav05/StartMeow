@@ -8,7 +8,7 @@ import (
 )
 
 func usage(){
-    fmt.Println("Usage: StartMeow <project-name> [--force]")
+	fmt.Println("Usage: StartMeow <project-name> [--force]")
 }
 
 func main() {
@@ -25,6 +25,10 @@ func main() {
 	q.Dequeue()
 	q.Dequeue()
 	fmt.Println("After", q)
+
+	q.Enqueue("100")
+	fmt.Println("After", q)
+
 
 
 	cmd := exec.Command("git", "branch", "--show-current")
