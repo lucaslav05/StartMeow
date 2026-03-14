@@ -8,6 +8,13 @@ type Queue struct {
 	List []any;
 }
 
+func InitQueue() Queue {
+
+	return Queue {
+		List: make([]any, 0),
+	}
+}
+
 func (q *Queue) Enqueue(item any) {
 	fmt.Println("enqueue called")
 

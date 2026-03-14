@@ -12,9 +12,7 @@ func usage(){
 }
 
 func main() {
-	q := queue.Queue {
-		List: make([]any, 0),
-	}
+	q := queue.InitQueue()
 
 	q.Enqueue("1")
 	q.Enqueue("2")
