@@ -4,7 +4,6 @@ import (
 	"fmt"
 	// 	tea "charm.land/bubbletea/v2"
 	"StartMeow/internal"
-	"StartMeow/queue"
 )
 
 func usage() {
@@ -12,7 +11,8 @@ func usage() {
 }
 
 func main() {
-	q := queue.InitQueue()
+
+	q := internal.InitQueue()
 
 	q.Enqueue("1")
 	q.Enqueue("2")
