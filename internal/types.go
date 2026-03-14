@@ -79,3 +79,5 @@ type Prompt struct {
 	promptType PromptType
 	questions  []string
 }
+
+var templatePaths = map[string]string{"expressServer": "src/server.js"}
