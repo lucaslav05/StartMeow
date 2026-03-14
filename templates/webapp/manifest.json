@@ -1,9 +1,0 @@
-{
-  "files": {
-    "public/index.html.tmpl":   "public/index.html",
-    "src/index.js.tmpl":        "src/index.js",
-    "gitignore.tmpl":           ".gitignore",
-    "package.json.tmpl":        "package.json",
-    "README.md.tmpl":           "README.md"
-  }
-}

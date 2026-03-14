@@ -6,7 +6,7 @@ import (
 	"flag"
 
 // 	tea "charm.land/bubbletea/v2"
-	"StartMeow/generator"
+	"StartMeow/internal"
 )
 
 func usage(){
