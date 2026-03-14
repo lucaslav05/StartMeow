@@ -3,6 +3,7 @@ package generator
 import (
     "os"
     "fmt"
+    "encoding/json"
     "path/filepath"
     "text/template"
 )
@@ -10,6 +11,26 @@ import (
 type Context struct {
     ProjectName string
     Force bool
+    Template string
+}
+
+type Manifest struct {
+    Files map[string]string `json: "files"`
+}
+
+// Create the map from the manifest json file
+func loadManifest(path string) (*Manifest, error) {
+    data, err := os.ReadFile(path)
+    if err != nil {
+        return nil, err
+    }
+
+    var m Manifest
+    if err := json.Unmarshal(data, &m); err != nil {
+        return nil, err
+    }
+
+    return &m, nil
 }
 
 func RenderTemplate(src, dest string, ctx Context) error {
@@ -34,26 +55,29 @@ func RenderTemplate(src, dest string, ctx Context) error {
     return tmpl.Execute(f, ctx)
 }
 
-func GenerateWebapp(ctx Context) error {
+func GenerateProject(ctx Context) error {
+    templateDir := filepath.Join("templates", ctx.Template)
+
+    // Load manifest.json for that template
+    manifestPath := filepath.Join(templateDir, "manifest.json")
+    manifest, err := loadManifest(manifestPath)
+    if err != nil {
+        return err
+    }
+
     // Check if directory exists
-    if _, err := os.Stat(ctx.ProjectName); err == nil && ctx.Force {
+    if _, err := os.Stat(ctx.ProjectName); err == nil && !ctx.Force {
         return fmt.Errorf("directory %s already exists (use --force to overwrite)")
     }
 
-    // The location of the templates for a webapp
-    base := "templates/webapp"
+    // Debug
+    fmt.Println("Using template:", ctx.Template)
+    fmt.Println("Template directory:", templateDir)
+    fmt.Println("Manifest path:", manifestPath)
 
-    // Map all the template files to the file they will create
-    files := map[string]string{
-        "public/index.html.tmpl":   "public/index.html",
-        "src/index.js.tmpl":        "src/index.js",
-        "gitignore.tmpl":           ".gitignore",
-        "package.json.tmpl":        "package.json",
-        "README.md.tmpl":           "README.md",
-    }
-
-    for src, dest := range files {
-        srcPath := filepath.Join(base, src)
+    // Render all the template files
+    for src, dest := range manifest.Files {
+        srcPath := filepath.Join(templateDir, src)
         destPath := filepath.Join(ctx.ProjectName, dest)
 
         if err := RenderTemplate(srcPath, destPath, ctx); err != nil{

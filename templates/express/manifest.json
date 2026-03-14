@@ -1,0 +1,7 @@
+{
+  "files": {
+    "src/server.js.tmpl": "src/server.js",
+    "package.json.tmpl": "package.json",
+    "README.md.tmpl": "README.md"
+  }
+}

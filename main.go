@@ -3,41 +3,51 @@ package main
 import (
 	"fmt"
 	"os"
+	"flag"
 
 // 	tea "charm.land/bubbletea/v2"
 	"StartMeow/generator"
 )
 
 func usage(){
-    fmt.Println("Usage: StartMeow <project-name> [--force]")
+    fmt.Println("Usage: StartMeow <project-name> [--template type] [--force]")
     return
 }
 
 func main() {
 // 	fmt.Println("Hello, World!")
-	if len(os.Args) < 2 {
+
+    // Define flags
+    templatePtr := flag.String("template", "webapp", "template of the project you want to generate")
+    forcePtr := flag.Bool("force", false, "if true, overwrite the same named project")
+
+    // Parse flags
+    flag.Parse()
+
+    args := flag.Args()
+
+//     if len(args) == 0 && *template == "" {
+//         // No args → launch Bubble Tea UI
+//         ui.Run()
+//         return
+//     }
+
+	if len(args) < 1 {
 	    usage()
-	    return
+	    os.Exit(1)
 	}
 
-    projectName := os.Args[1]
-    force := false
-
-    // Check for --force flag
-    if len(os.Args) > 2 && os.Args[2] == "--force" {
-        force = true
-    }
+    projectName := args[0]
 
     ctx := generator.Context{
         ProjectName: projectName,
-        Force: force,
+        Template: *templatePtr,
+        Force: *forcePtr,
     }
 
-    fmt.Println("Generating barebones webapp: ", projectName)
-
-    if err := generator.GenerateWebapp(ctx); err != nil {
+    if err := generator.GenerateProject(ctx); err != nil {
         fmt.Println("Error: ", err)
-        return
+        os.Exit(1)
     }
 
     fmt.Println(projectName, " is ready!")
