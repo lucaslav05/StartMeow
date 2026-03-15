@@ -1,9 +1,19 @@
 package internal
 
+//go:generate stringer -type=UserInterface
+
+type UserInterface int
+
+const (
+	Store UserInterface = iota
+	Download
+	Blog
+	Landing
+)
+
 type ProjectType int
 type Framework int
 type Language int
-type UserInterface int
 type PromptType int
 type Database int
 
@@ -36,13 +46,6 @@ const (
 )
 
 const (
-	Store UserInterface = iota
-	Download
-	Blog
-	Empty
-)
-
-const (
 	Select PromptType = iota
 	Field
 	Info
@@ -63,14 +66,13 @@ type Project struct {
 	Ui         UserInterface
 	Database   Database
 	ProjName   string
-	FilePath   string
 }
 
 type Prompt struct {
-	Question      string
+	Question   string
 	PromptType PromptType
-	Options  []string
-	Input string
+	Options    []string
+	Input      string
 }
 
 var templatePaths = map[string]string{"expressServer": "src/server.js"}

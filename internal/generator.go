@@ -56,28 +56,21 @@ func RenderTemplate(src, dest string, ctx Context) error {
 }
 
 func GenerateProject(ctx Context) error {
-	templateDir := filepath.Join("templates", ctx.Template)
-
-	// Load manifest.json for that template
-	manifestPath := filepath.Join(templateDir, "manifest.json")
-	manifest, err := loadManifest(manifestPath)
+	// Load the generated Manifest file
+	manifest, err := loadManifest("manifest.json")
 	if err != nil {
 		return err
 	}
 
-	// Check if directory exists
+	// Raise error if the project directory already exists and --force flag is not set
 	if _, err := os.Stat(ctx.ProjectName); err == nil && !ctx.Force {
 		return fmt.Errorf("directory %s already exists (use --force to overwrite)", ctx.ProjectName)
 	}
 
-	fmt.Println("Using template:", ctx.Template)
-	fmt.Println("Template directory:", templateDir)
-	fmt.Println("Manifest path:", manifestPath)
-
-	// Render all the template files
 	for src, dest := range manifest.Files {
-		srcPath := filepath.Join(templateDir, src)
-		destPath := filepath.Join(ctx.ProjectName, dest)
+
+		srcPath := src
+		destPath := dest
 
 		if err := RenderTemplate(srcPath, destPath, ctx); err != nil {
 			return err
@@ -101,5 +94,6 @@ func GenerateManifest(fileMap map[string]string, outputPath string) error {
 	}
 
 	// Write manifest.json to the output path
+	fmt.Printf("Writing manifest to %s \n", outputPath)
 	return os.WriteFile(outputPath, data, 0644)
 }
