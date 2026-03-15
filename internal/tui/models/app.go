@@ -1,7 +1,7 @@
 package models
 
 import (
-	style "StartMeow/internal/styles"
+	style "StartMeow/internal/tui/styles"
 	"fmt"
 	"log"
 	"strings"
