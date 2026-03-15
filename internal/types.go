@@ -55,21 +55,22 @@ const (
 )
 
 type Project struct {
-	projType   ProjectType
-	frontFrame Framework
-	backFrame  Framework
-	frontLang  Language
-	backLang   Language
-	ui         UserInterface
-	database   Database
-	projName   string
-	filePath   string
+	ProjType   ProjectType
+	FrontFrame Framework
+	BackFrame  Framework
+	FrontLang  Language
+	BackLang   Language
+	Ui         UserInterface
+	Database   Database
+	ProjName   string
+	FilePath   string
 }
 
 type Prompt struct {
-	title      string
-	promptType PromptType
-	questions  []string
+	Question      string
+	PromptType PromptType
+	Options  []string
+	Input string
 }
 
 var templatePaths = map[string]string{"expressServer": "src/server.js"}
