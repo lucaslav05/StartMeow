@@ -90,49 +90,84 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) View() tea.View {
-	var l string
+	var tabView string
 
 	currentQuestion := m.questions[m.qIndex]
 
 	switch currentQuestion.Prompt.PromptType {
 	// current question is prompt
 	case internal.Field:
-		l = lipgloss.JoinVertical(
-			lipgloss.Center,
-			m.styles.Title.Render(m.questions[m.qIndex].Prompt.Question),
-			m.styles.InputField.Render(
-				m.answerField.View(),
-			),
-		)
+		tabView = m.ViewTab(
+			lipgloss.JoinVertical(
+				lipgloss.Left,
+				m.styles.TabStyle.Render(
+					m.ViewField(),
+				),
+			))
 
 	// current question is select
 	case internal.Select:
 		// log.Println("Case: Select")
-		l = lipgloss.JoinVertical(
-			lipgloss.Left,
-			m.styles.Title.Render(m.questions[m.qIndex].Prompt.Question),
-			m.ViewSelect(),
+		tabView = m.ViewTab(
+			lipgloss.JoinVertical(
+				lipgloss.Left,
+				m.styles.TabStyle.Render(
+					m.ViewSelect(),
+				),
+			),
 		)
 
 	case internal.Info:
 		// current question is verify
-		l = lipgloss.JoinVertical(
-			lipgloss.Left,
-			m.styles.Title.Render(m.questions[m.qIndex].Prompt.Question),
-			m.ViewVerify(),
-		)
+		tabView = m.ViewTab(
+			lipgloss.JoinVertical(
+				lipgloss.Left,
+				m.styles.TabStyle.Render(
+					m.ViewVerify(),
+				),
+			))
 	}
 
-	helpView := m.styles.Title.Render(m.help.View(m.keys))
+	helpView := lipgloss.Place(
+		m.width,
+		2,
+		lipgloss.Center,
+		lipgloss.Bottom,
+		m.styles.Title.Render(m.help.View(m.keys)),
+	)
 
-	v := tea.NewView(l + strings.Repeat("\n", 2) + helpView)
+	finalView := lipgloss.JoinVertical(lipgloss.Center, tabView, helpView)
+
+	v := tea.NewView(finalView)
 	v.BackgroundColor = lipgloss.Color(style.BackgroundBlack)
 	v.AltScreen = true
 	return v
 }
 
+func (m model) ViewTab(view string) string {
+	return lipgloss.Place(
+		m.width,
+		m.height/2,
+		lipgloss.Center,
+		lipgloss.Bottom,
+		view,
+	)
+}
+
+func (m model) ViewField() string {
+	var rows []string
+
+	rows = append(rows, m.styles.Title.Render(m.questions[m.qIndex].Prompt.Question))
+	rows = append(rows, m.styles.InputField.Render(m.answerField.View()))
+
+	return strings.Join(rows, "\n")
+}
+
 func (m model) ViewSelect() string {
 	var rows []string
+
+	rows = append(rows, m.styles.Title.Render(m.questions[m.qIndex].Prompt.Question))
+
 	currentQuestion := m.questions[m.qIndex]
 	options := currentQuestion.Prompt.Options
 	optionIndex := currentQuestion.OptionIndex
@@ -151,13 +186,16 @@ func (m model) ViewSelect() string {
 func (m model) ViewVerify() string {
 	var rows []string
 
+	rows = append(rows, m.styles.Title.Render(m.questions[m.qIndex].Prompt.Question))
+	// rows = append(rows, "")
+
 	for _, v := range m.questions {
 		var s string
 		switch v.Prompt.PromptType {
 		case internal.Select:
-			s = fmt.Sprintf("%s: %s", m.styles.Title.Render(v.Prompt.Question), m.styles.OptionSelect.Render(v.Prompt.Options[v.OptionIndex]))
+			s = fmt.Sprintf("%s: %s", m.styles.Options.Render(v.Prompt.Question), m.styles.OptionSelect.Render(v.Prompt.Options[v.OptionIndex]))
 		case internal.Field:
-			s = fmt.Sprintf("%s: %s", m.styles.Title.Render(v.Prompt.Question), m.styles.OptionSelect.Render(v.Prompt.Input))
+			s = fmt.Sprintf("%s: %s", m.styles.Options.Render(v.Prompt.Question), m.styles.OptionSelect.Render(v.Prompt.Input))
 		}
 
 		if s != "" {
@@ -165,7 +203,7 @@ func (m model) ViewVerify() string {
 		}
 	}
 
-	s := "\nConfirm project? (Y/n):"
+	s := m.styles.OptionSelect.Render("\nConfirm project? (Y/n):")
 	rows = append(rows, s)
 
 	return strings.Join(rows, "\n")
