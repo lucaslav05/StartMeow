@@ -1,8 +1,6 @@
 package style
 
-import (
-	"charm.land/lipgloss/v2"
-)
+import "charm.land/lipgloss/v2"
 
 const (
 	White           = "#f8edeb"

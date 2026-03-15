@@ -1,13 +1,15 @@
 package models
 
+type QuestionType int
+
 const (
-	Select = iota
+	Select QuestionType = iota
 	Prompt
 	Verify
 )
 
 type Question struct {
-	QuestionType int
+	QuestionType QuestionType
 	Question     string
 	Options      []string
 	OptionIndex  int
@@ -28,4 +30,8 @@ func (q *Question) Prev() {
 	} else {
 		q.OptionIndex = len(q.Options) - 1
 	}
+}
+
+func NewQuestion(question string, qtype QuestionType, options []string) Question {
+	return Question{QuestionType: qtype, Question: question, Options: options, OptionIndex: 0}
 }
