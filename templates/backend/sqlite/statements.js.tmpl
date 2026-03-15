@@ -1,0 +1,46 @@
+const { create } = require('node:domain')
+
+const db = require('better-sqlite3')('database.db')
+
+const createTable = () => {
+    const sql =  `
+        CREATE TABLE users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            age INTEGER
+        )
+    `
+    db.prepare(sql).run()
+}
+
+const InsertUser = (name, age) => {
+    const sql =  `
+        INSERT INTO users (name, age)
+        VALUES (?, ?)
+    `
+    db.prepare(sql).run(name, age)
+}
+
+const GetUsers = (id) => {
+    const sql =  `
+        SELECT * FROM users
+        WHERE id = ?
+    `
+    const rows = db.prepare(sql).all(id)
+    console.log(rows)
+}
+
+const GetAllUsers = (id) => {
+    const sql =  `
+        SELECT * FROM users
+    `
+    const rows = db.prepare(sql).all()
+    console.log(rows)
+}
+
+createTable()
+InsertUser("Jane Doe", 21)
+GetUsers(1)
+GetAllUsers()
+
+

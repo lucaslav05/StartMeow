@@ -1,0 +1,45 @@
+import Image from "next/image";
+
+export default function Home() {
+  return (
+    <div className="min-h-screen flex flex-col bg-gray-100 p-8">
+    <header className="mb-8">
+        <h1 className="text-4xl font-bold">Blog</h1>
+        <p className="text-gray-600">Latest posts and updates</p>
+    </header>
+
+    <main className="space-y-4 flex-grow">
+        <article className="bg-white p-6 rounded-lg shadow">
+            <h2 className="text-2xl font-semibold">Sample Blog Post</h2>
+            <p className="text-gray-700 mt-2">
+                This is a placeholder blog post. Replace this with your own content.
+            </p>
+        </article>
+    </main>
+    
+    <footer className="bg-gray-800 text-white py-6 rounded-lg">
+        <div className="container mx-auto flex justify-between pl-4 pr-4">
+            <div>
+                <h4 className="font-semibold">Quick Links</h4>
+                <ul className="space-y-1 pl-2">
+                    <li><a href="#" className="hover:text-gray-400">Home</a></li>
+                    <li><a href="#" className="hover:text-gray-400">Store</a></li>
+                    <li><a href="#" className="hover:text-gray-400">Download</a></li>
+                    <li><a href="#" className="hover:text-gray-400">Blog</a></li>
+                </ul>
+            </div>
+
+            <div className="flex space-x-4">
+                <a href="#" className="hover:text-gray-400">GitHub</a>
+                <a href="#" className="hover:text-gray-400">LinkedIn</a>
+                <a href="#" className="hover:text-gray-400">Twitter</a>
+            </div>
+        </div>
+
+        <div className="mt-4 text-center">
+            <p className="text-sm">&copy; 2026 StartMeow.</p>
+        </div>
+    </footer>
+</div>
+  );
+}
