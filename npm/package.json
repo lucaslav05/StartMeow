@@ -1,0 +1,20 @@
+{
+  "name": "startmeow",
+  "version": "0.1.0",
+  "description": "StartMeow CLI distributed via npm",
+  "bin": {
+    "startmeow": "./bin/startmeow"
+  },
+  "scripts": {
+    "postinstall": "go-npm install",
+    "preuninstall": "go-npm uninstall"
+  },
+  "goBinary": {
+    "name": "startmeow",
+    "path": "./bin",
+    "url": "https://github.com/lucaslav05/StartMeow/archive/refs/tags/v0.0.5.tar.gz"
+  },
+  "dependencies": {
+    "go-npm": "^1.0.0"
+  }
+}
