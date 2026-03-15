@@ -19,6 +19,19 @@ func buildProject(proj *Project) {
 
 func buildWebApp(proj *Project) {
 
+	if proj.frontFrame == React {
+
+		switch proj.backFrame {
+		case NextJS:
+		case ReactRouter:
+		case ExpressJs:
+		default:
+		}
+
+	} else {
+
+	}
+
 }
 
 func buildClientServer(proj *Project) {
