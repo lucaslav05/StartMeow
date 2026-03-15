@@ -11,7 +11,7 @@ func _() {
 	_ = x[Store-0]
 	_ = x[Download-1]
 	_ = x[Blog-2]
-	_ = x[Empty-3]
+	_ = x[Landing-3]
 }
 
 const _UserInterface_name = "StoreDownloadBlogEmpty"
