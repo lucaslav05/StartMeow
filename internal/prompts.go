@@ -1,5 +1,19 @@
 package internal
 
+
+func InitPrompts() Queue {
+	q := InitPrompts()
+	q.Enqueue(AppType);
+
+	return q
+}
+
+func StateRouter(promptqueue *Queue, answer Prompt) Prompt {
+
+	
+	return promptqueue.Dequeue();
+}
+
 // first question
 var AppType = Prompt {
 	Question: "Pick an Application",
@@ -71,5 +85,16 @@ var StartingUI = Prompt{
 		"Download",
 		"Blog",
 		"Empty",
+	},
+}
+
+// this comes after starting UI prompt
+var WhichDB = Prompt{
+	Question: "Pick a starting UI",
+	PromptType: Select,
+	Options: []string{
+		"MongoDB",
+		"Firebase",
+		"SQLite",
 	},
 }

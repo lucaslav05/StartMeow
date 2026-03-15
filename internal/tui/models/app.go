@@ -41,6 +41,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.Next()
 			current.Answer = m.answerField.Value()
 			m.SetAnswerValue()
+			//CRITICAL SECTION
 			return m, nil
 		case "up":
 			current.Prev()
