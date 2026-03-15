@@ -31,3 +31,7 @@ func (q *Question) Prev() {
 		q.OptionIndex = len(q.Options) - 1
 	}
 }
+
+func NewQuestion(question string, qtype QuestionType, options []string) Question {
+	return Question{QuestionType: qtype, Question: question, Options: options, OptionIndex: 0}
+}
