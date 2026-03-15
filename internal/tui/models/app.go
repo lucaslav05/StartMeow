@@ -4,6 +4,7 @@ import (
 	"StartMeow/internal"
 	style "StartMeow/internal/tui/styles"
 	"fmt"
+	"log"
 	"strings"
 
 	"charm.land/bubbles/v2/help"
@@ -24,6 +25,8 @@ type model struct {
 	answerField textinput.Model
 	help        help.Model
 	keys        help.KeyMap
+	queue       internal.Queue
+	pStruct     *internal.Project
 }
 
 func (m model) Init() tea.Cmd {
@@ -49,8 +52,21 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "enter":
 			// if we are at the end of the form, do not go to next
 			if currentQ.Prompt.PromptType == internal.Info {
+				m.pStruct.ProjName = "test"
+				// internal.BuildProject(m.pStruct)
 				return m, tea.Quit
 			}
+
+			// create answer prompt and feed it it to state router
+			answerPrompt := internal.Prompt{Question: currentQ.Prompt.Question,
+				PromptType: currentQ.Prompt.PromptType,
+				Input:      currentQ.Prompt.Options[currentQ.OptionIndex]}
+			nextP := internal.StateRouter(&m.queue, answerPrompt, m.pStruct)
+
+			// add next question it to list
+			nextQ := NewQuestionFromPrompt(nextP)
+			m.questions = append(m.questions, nextQ)
+			log.Println(m.questions)
 
 			m.NextQuestion()
 			currentQ.Prompt.Input = m.answerField.Value()
@@ -243,7 +259,7 @@ func (m *model) ClearAnswers() {
 	}
 }
 
-func NewDefaultModel(questions []Question) *model {
+func NewDefaultModel(questions []Question, queue internal.Queue, pStruct *internal.Project) *model {
 	mainStyle := style.DefaultStyles()
 
 	answerField := textinput.New()
@@ -256,5 +272,7 @@ func NewDefaultModel(questions []Question) *model {
 		styles:      mainStyle,
 		keys:        keys,
 		help:        help.New(),
+		queue:       queue,
+		pStruct:     pStruct,
 	}
 }

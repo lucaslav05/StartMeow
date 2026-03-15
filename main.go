@@ -2,11 +2,16 @@ package main
 
 import (
 	"StartMeow/internal"
+	models "StartMeow/internal/tui/models"
 	"embed"
+	"fmt"
 	"html/template"
 	"io/fs"
 	"log"
+	"os"
 	"path/filepath"
+
+	tea "charm.land/bubbletea/v2"
 )
 
 //go:embed all:templates
@@ -38,39 +43,41 @@ func main() {
 
 	tmpl := walk(templateFS)
 
-	// f, err := tea.LogToFile("debug.log", "debug")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	// defer f.Close()
-
-	// questions := []models.Question{
-	// 	models.NewQuestion("Select a language", models.Select, []string{"C", "C#", "Java", "JavaScript"}),
-	// 	models.NewQuestion("Insert project name", models.Prompt, []string{}),
-	// 	models.NewQuestion("Verify project structure", models.Verify, []string{}),
-	// }
-
-	// m := models.NewDefaultModel(questions)
-
-	// p := tea.NewProgram(m)
-	// if _, err := p.Run(); err != nil {
-	// 	fmt.Printf("Error occurred: %v", err)
-	// 	os.Exit(1)
-	// }
-
-	testProj := internal.Project{
-		ProjType:   internal.WebApp,
-		FrontFrame: internal.React,
-		BackFrame:  internal.NextJS,
-		FrontLang:  internal.Javascript,
-		BackLang:   internal.Typescript,
-		Ui:         internal.Download,
-		Database:   internal.MongoDB,
-		ProjName:   "test-project",
+	f, err := tea.LogToFile("debug.log", "debug")
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	internal.BuildProject(&testProj, *tmpl)
+	defer f.Close()
+
+	q := internal.InitPrompts()
+	initialP := q.Dequeue()
+
+	pStruct := internal.Project{}
+
+	questions := []models.Question{models.NewQuestion(initialP.Question, initialP.PromptType, initialP.Options)}
+
+	m := models.NewDefaultModel(questions, q, &pStruct)
+
+	p := tea.NewProgram(m)
+	if _, err := p.Run(); err != nil {
+		log.Printf("Error occurred: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Println(pStruct)
+	internal.BuildProject(&pStruct, *tmpl)
+
+	// testProj := internal.Project{
+	// 	ProjType:   internal.WebApp,
+	// 	FrontFrame: internal.React,
+	// 	BackFrame:  internal.NextJS,
+	// 	FrontLang:  internal.Javascript,
+	// 	BackLang:   internal.Typescript,
+	// 	Ui:         internal.Download,
+	// 	Database:   internal.MongoDB,
+	// 	ProjName:   "test-project",
+	// }
 
 	// 	type Project struct {
 	// 	ProjType   ProjectType

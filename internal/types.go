@@ -53,8 +53,8 @@ const (
 
 const (
 	MongoDB Database = iota
-	Firebase
 	SQLite
+	None
 )
 
 type Project struct {
