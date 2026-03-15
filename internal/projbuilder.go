@@ -27,6 +27,12 @@ func BuildProject(proj *Project) {
 }
 
 func BuildWebApp(proj *Project) {
+	pwd, err := os.Getwd()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	fmt.Println(pwd)
 
 	if proj.FrontFrame == React {
 		fmt.Println("Building React")
@@ -50,7 +56,7 @@ func BuildWebApp(proj *Project) {
 			}
 
 			//FIX THIS ONCE FUNCTION IS UPDATED!
-			GenerateManifest(selections, "manifest.json")
+			GenerateManifest(selections, fmt.Sprintf("%s/manifest.json", pwd))
 
 			var context = makeContext(proj)
 
@@ -79,7 +85,7 @@ func BuildWebApp(proj *Project) {
 				fmt.Fprintln(os.Stderr, err)
 			}
 
-			GenerateManifest(selections, "manifest.json")
+			GenerateManifest(selections, fmt.Sprintf("%s/manifest.json", pwd))
 
 			var context = makeContext(proj)
 
@@ -99,7 +105,7 @@ func BuildWebApp(proj *Project) {
 			}
 
 			//FIX THIS ONCE FUNCTION IS UPDATED!
-			GenerateManifest(selections, "manifest.json")
+			GenerateManifest(selections, fmt.Sprintf("%s/manifest.json", pwd))
 
 			var context = makeContext(proj)
 
@@ -140,11 +146,21 @@ func MakeTemplatePaths(proj *Project) map[string]string {
 			case NextJS:
 				mapping[fmt.Sprintf("templates/ui/%s/page.tsx.tmpl", strings.ToLower(proj.Ui.String()))] = fmt.Sprintf("%s/app/page.tsx", proj.ProjName)
 
+				switch proj.Database {
+				case MongoDB:
+					mapping["templates/backend/mongo/.env.tmpl"] = fmt.Sprintf("%s/.env", proj.ProjName)
+					mapping["templates/backend/mongo/database.js.tmpl"] = fmt.Sprintf("%s/database.js", proj.ProjName)
+				case SQLite:
+					mapping["templates/backend/sqlite/database.db.tmpl"] = fmt.Sprintf("%s/database/database.db", proj.ProjName)
+					mapping["templates/backend/sqlite/statements.js.tmpl"] = fmt.Sprintf("%s/database/statements.js", proj.ProjName)
+					mapping["templates/backend/sqlite/statements.sql.tmpl"] = fmt.Sprintf("%s/database/statements.sql", proj.ProjName)
+				}
+
 			case ReactRouter:
 				mapping[fmt.Sprintf("templates/ui/%s/home.tsx.tmpl", strings.ToLower(proj.Ui.String()))] = fmt.Sprintf("%s/app/routes/home.tsx", proj.ProjName)
 
 			case ExpressJs:
-				mapping[fmt.Sprintf("templates/ui/%s/App.js.tmpl", strings.ToLower(proj.Ui.String()))] = fmt.Sprintf("%s/app/App.js", proj.ProjName)
+				mapping[fmt.Sprintf("templates/ui/%s/App.js.tmpl", strings.ToLower(proj.Ui.String()))] = fmt.Sprintf("client/app/App.js")
 				mapping["templates/backend/express/index.js.tmpl"] = "server/index.js"
 				mapping["templates/backend/express/package.json.tmpl"] = "server/package.json"
 

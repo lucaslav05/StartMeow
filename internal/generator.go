@@ -57,7 +57,12 @@ func RenderTemplate(src, dest string, ctx Context) error {
 
 func GenerateProject(ctx Context) error {
 	// Load the generated Manifest file
-	manifest, err := loadManifest("manifest.json")
+	pwd, err := os.Getwd()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	manifest, err := loadManifest(pwd + "/manifest.json")
 	if err != nil {
 		return err
 	}
@@ -70,7 +75,8 @@ func GenerateProject(ctx Context) error {
 	for src, dest := range manifest.Files {
 
 		srcPath := src
-		destPath := dest
+		destPath := filepath.Join(pwd, dest)
+		fmt.Println(destPath)
 
 		if err := RenderTemplate(srcPath, destPath, ctx); err != nil {
 			return err
