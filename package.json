@@ -1,0 +1,33 @@
+{
+    "name": "startmeow",
+    "version": "1.0.0",
+    "description": "",
+    "homepage": "https://github.com/lucaslav05/StartMeow#readme",
+    "bugs": {
+        "url": "https://github.com/lucaslav05/StartMeow/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/lucaslav05/StartMeow.git"
+    },
+    "license": "ISC",
+    "author": "",
+    "type": "commonjs",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "dependencies": {
+        "go-npm": "^0.1.9"
+    }
+
+    "goBinary": {
+        "name": "start-meow",
+        "path": "./StartMeow",
+        "url": "https://github.com/user/my-go-package/releases/download/v{{version}}/myGoPackage_{{version}}_{{platform}}_{{arch}}.tar.gz"
+    }
+}
+{
+    "postinstall": "go-npm install",
+    "preuninstall": "go-npm uninstall",
+}

@@ -1,0 +1,8 @@
+# .goreleaser.yml
+# Build customization
+builds:
+  - binary: StartMeow
+    goos:
+      - linux
+    goarch:
+      - amd64
