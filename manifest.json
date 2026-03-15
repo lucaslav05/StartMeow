@@ -1,0 +1,5 @@
+{
+  "Files": {
+    "templates/ui/download/page.tsx.tmpl": "test-project/app/page.tsx"
+  }
+}
