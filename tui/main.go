@@ -10,10 +10,6 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
-func NewQuestion(question string, qtype models.QuestionType, options []string) models.Question {
-	return models.Question{QuestionType: qtype, Question: question, Options: options, OptionIndex: 0}
-}
-
 func main() {
 	f, err := tea.LogToFile("debug.log", "debug")
 	if err != nil {
@@ -23,9 +19,9 @@ func main() {
 	defer f.Close()
 
 	questions := []models.Question{
-		NewQuestion("Select a language", models.Select, []string{"C", "C#", "Java", "JavaScript"}),
-		NewQuestion("Insert project name", models.Prompt, []string{}),
-		NewQuestion("Verify project structure", models.Verify, []string{}),
+		models.NewQuestion("Select a language", models.Select, []string{"C", "C#", "Java", "JavaScript"}),
+		models.NewQuestion("Insert project name", models.Prompt, []string{}),
+		models.NewQuestion("Verify project structure", models.Verify, []string{}),
 	}
 
 	m := models.NewDefaultModel(questions)
