@@ -53,11 +53,12 @@ func main() {
 	q := internal.InitPrompts()
 	initialP := q.Dequeue()
 
+	state := false
 	pStruct := internal.Project{}
 
 	questions := []models.Question{models.NewQuestion(initialP.Question, initialP.PromptType, initialP.Options)}
 
-	m := models.NewDefaultModel(questions, q, &pStruct)
+	m := models.NewDefaultModel(questions, q, &pStruct, &state)
 
 	p := tea.NewProgram(m)
 	if _, err := p.Run(); err != nil {
@@ -66,7 +67,9 @@ func main() {
 	}
 
 	fmt.Println(pStruct)
-	internal.BuildProject(&pStruct, *tmpl)
+	if state {
+		internal.BuildProject(&pStruct, *tmpl)
+	}
 
 	// testProj := internal.Project{
 	// 	ProjType:   internal.WebApp,

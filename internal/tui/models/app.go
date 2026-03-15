@@ -27,6 +27,7 @@ type model struct {
 	keys        help.KeyMap
 	queue       internal.Queue
 	pStruct     *internal.Project
+	state       *bool
 }
 
 func (m model) Init() tea.Cmd {
@@ -53,7 +54,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// if we are at the end of the form, do not go to next
 			if currentQ.Prompt.PromptType == internal.Info {
 				m.pStruct.ProjName = "test"
-				// internal.BuildProject(m.pStruct)
+				*m.state = true
 				return m, tea.Quit
 			}
 
@@ -259,7 +260,7 @@ func (m *model) ClearAnswers() {
 	}
 }
 
-func NewDefaultModel(questions []Question, queue internal.Queue, pStruct *internal.Project) *model {
+func NewDefaultModel(questions []Question, queue internal.Queue, pStruct *internal.Project, state *bool) *model {
 	mainStyle := style.DefaultStyles()
 
 	answerField := textinput.New()
@@ -274,5 +275,6 @@ func NewDefaultModel(questions []Question, queue internal.Queue, pStruct *intern
 		help:        help.New(),
 		queue:       queue,
 		pStruct:     pStruct,
+		state:       state,
 	}
 }
