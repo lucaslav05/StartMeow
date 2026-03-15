@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"StartMeow/internal"
 	style "StartMeow/internal/tui/styles"
 	"fmt"
 	"log"
@@ -39,7 +40,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		case "enter":
 			m.Next()
-			current.Answer = m.answerField.Value()
+			current.Prompt.Input = m.answerField.Value()
 			m.SetAnswerValue()
 			return m, nil
 		case "up":
@@ -47,12 +48,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "down":
 			current.Next()
 		case "y":
-			if current.QuestionType == Verify {
+			if current.Prompt.PromptType == internal.Info {
 				log.Println("Verified!")
 				return m, tea.Quit
 			}
 		case "n":
-			if current.QuestionType == Verify {
+			if current.Prompt.PromptType == internal.Info {
 				m.ClearAnswers()
 				m.Next()
 			}
@@ -67,31 +68,31 @@ func (m model) View() tea.View {
 
 	currentQuestion := m.questions[m.index]
 
-	switch currentQuestion.QuestionType {
+	switch currentQuestion.Prompt.PromptType {
 	// current question is prompt
-	case Prompt:
+	case internal.Field:
 		l = lipgloss.JoinVertical(
 			lipgloss.Center,
-			m.styles.Title.Render(m.questions[m.index].Question),
+			m.styles.Title.Render(m.questions[m.index].Prompt.Question),
 			m.styles.InputField.Render(
 				m.answerField.View(),
 			),
 		)
 
 	// current question is select
-	case Select:
+	case internal.Select:
 		// log.Println("Case: Select")
 		l = lipgloss.JoinVertical(
 			lipgloss.Left,
-			m.styles.Title.Render(m.questions[m.index].Question),
+			m.styles.Title.Render(m.questions[m.index].Prompt.Question),
 			m.ViewSelect(),
 		)
 
-	case Verify:
+	case internal.Info:
 		// current question is verify
 		l = lipgloss.JoinVertical(
 			lipgloss.Left,
-			m.styles.Title.Render(m.questions[m.index].Question),
+			m.styles.Title.Render(m.questions[m.index].Prompt.Question),
 			m.ViewVerify(),
 		)
 	}
@@ -106,7 +107,7 @@ func (m model) View() tea.View {
 func (m model) ViewSelect() string {
 	var rows []string
 	currentQuestion := m.questions[m.index]
-	options := currentQuestion.Options
+	options := currentQuestion.Prompt.Options
 	optionIndex := currentQuestion.OptionIndex
 
 	for i, v := range options {
@@ -125,11 +126,11 @@ func (m model) ViewVerify() string {
 
 	for _, v := range m.questions {
 		var s string
-		switch v.QuestionType {
-		case Select:
-			s = fmt.Sprintf("%s: %s", m.styles.Title.Render(v.Question), m.styles.OptionSelect.Render(v.Options[v.OptionIndex]))
-		case Prompt:
-			s = fmt.Sprintf("%s: %s", m.styles.Title.Render(v.Question), m.styles.OptionSelect.Render(v.Answer))
+		switch v.Prompt.PromptType {
+		case internal.Select:
+			s = fmt.Sprintf("%s: %s", m.styles.Title.Render(v.Prompt.Question), m.styles.OptionSelect.Render(v.Prompt.Options[v.OptionIndex]))
+		case internal.Field:
+			s = fmt.Sprintf("%s: %s", m.styles.Title.Render(v.Prompt.Question), m.styles.OptionSelect.Render(v.Prompt.Input))
 		}
 
 		if s != "" {
@@ -160,7 +161,7 @@ func (m *model) Prev() {
 }
 
 func (m *model) SetAnswerValue() {
-	currentAnswer := m.questions[m.index].Answer
+	currentAnswer := m.questions[m.index].Prompt.Input
 
 	if currentAnswer != "" {
 		m.answerField.SetValue(currentAnswer)
@@ -173,7 +174,7 @@ func (m *model) ClearAnswers() {
 	q := m.questions
 
 	for i := range q {
-		q[i].Answer = ""
+		q[i].Prompt.Input = ""
 	}
 }
 

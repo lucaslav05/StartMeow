@@ -1,40 +1,14 @@
-<<<<<<< HEAD
 package internal
 
 import internal "StartMeow/internal"
-=======
-package models
->>>>>>> dev
-
-type QuestionType int
-
-const (
-	Select QuestionType = iota
-	Prompt
-	Verify
-)
 
 type Question struct {
-<<<<<<< HEAD
-	PromptType  internal.PromptType
 	Prompt      internal.Prompt
 	OptionIndex int
-	Answer      string
 }
 
 func (q *Question) Next() {
-	if q.OptionIndex < len(q.Prompt.questions)-1 {
-=======
-	QuestionType QuestionType
-	Question     string
-	Options      []string
-	OptionIndex  int
-	Answer       string
-}
-
-func (q *Question) Next() {
-	if q.OptionIndex < len(q.Options)-1 {
->>>>>>> dev
+	if q.OptionIndex < len(q.Prompt.Question)-1 {
 		q.OptionIndex++
 	} else {
 		q.OptionIndex = 0
@@ -45,13 +19,16 @@ func (q *Question) Prev() {
 	if q.OptionIndex > 0 {
 		q.OptionIndex--
 	} else {
-		q.OptionIndex = len(q.Options) - 1
+		q.OptionIndex = len(q.Prompt.Options) - 1
 	}
 }
-<<<<<<< HEAD
-=======
 
-func NewQuestion(question string, qtype QuestionType, options []string) Question {
-	return Question{QuestionType: qtype, Question: question, Options: options, OptionIndex: 0}
+func NewQuestion(question string, qtype internal.PromptType, options []string) Question {
+	p := internal.Prompt{
+		Question:   question,
+		PromptType: qtype,
+		Options:    options,
+	}
+
+	return Question{Prompt: p, OptionIndex: 0}
 }
->>>>>>> dev
