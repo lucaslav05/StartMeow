@@ -8,35 +8,68 @@ var AppType = Prompt {
 		"Web app",
 		"Client/Server",
 		"Mobile",
-		"Terminal"
+		"Terminal",
 	},
 }
 
 // second question
 var FrontendFrameworkType = Prompt {
-	Question: "Frontend Framework Type",
+	Question: "Do you want a React frontend framework?",
 	PromptType: Select,
-	Options: []string{"Do you want a React frontend framework?"}
+	Options: []string{
+		"yes",
+		"no",
+	},
 }
 
 // if it's yes queue these prompts
-var BackendFramework = Prompt {
-	Question: "Backend Framework Type",
-	PromptType: "Select",
+var BackendFrameworkReact = Prompt {
+	Question: "Choose a backend React framework",
+	PromptType: Select,
 	Options: []string{
-		"Choose a backend React framework",
 		"Nextjs",
 		"ReactRouter",
-		"Express"
+		"Express",
 	},
 }
 
 // if no, queue the non framework prompts
-var 
+var BackendFramework = Prompt{
+	Question: "Choose a backend framework",
+	PromptType: Select,
+	Options: []string{
+		"Express",
+		"Node",
+		"None",
+	},
+}
 
+// this queues if the no react backend framework option was "none"
+var WhichLanguage = Prompt{
+	Question: "Choose a language for your backend",
+	PromptType: Select,
+	Options: []string{
+		"c",
+		"Javascript",
+		"Typescript",
+		"Go",
+		"c++",
+		"Java",
+		"Swift",
+		"Kotlin",
+		"CSharp",
+		"Jsx",
+	},
+}
 
-
-
-
-
-
+// WhichLanguage, BackendFramework, BackendFrameworkReact all queue this prompt after
+var StartingUI = Prompt{
+	Question: "Pick a starting UI",
+	PromptType: Select,
+	Options: []string{
+		"Store",
+		"Download",
+		"Blog",
+		"Empty",
+	},
+}
