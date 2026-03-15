@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ .ProjectName }} – Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen flex flex-col bg-gray-100 p-8">
+    <header class="mb-8">
+        <h1 class="text-4xl font-bold">Blog</h1>
+        <p class="text-gray-600">Latest posts and updates</p>
+    </header>
+
+    <main class="space-y-4 flex-grow">
+        <article class="bg-white p-6 rounded-lg shadow">
+            <h2 class="text-2xl font-semibold">Sample Blog Post</h2>
+            <p class="text-gray-700 mt-2">
+                This is a placeholder blog post. Replace this with your own content.
+            </p>
+        </article>
+    </main>
+    
+    <footer class="bg-gray-800 text-white py-6 rounded-lg">
+        <div class="container mx-auto flex justify-between">
+            <div>
+                <h4 class="font-semibold">Quick Links</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-gray-400">Home</a></li>
+                    <li><a href="#" class="hover:text-gray-400">Store</a></li>
+                    <li><a href="#" class="hover:text-gray-400">Download</a></li>
+                    <li><a href="#" class="hover:text-gray-400">Blog</a></li>
+                </ul>
+            </div>
+
+            <div class="flex space-x-4">
+                <a href="#" class="hover:text-gray-400">GitHub</a>
+                <a href="#" class="hover:text-gray-400">LinkedIn</a>
+                <a href="#" class="hover:text-gray-400">Twitter</a>
+            </div>
+        </div>
+
+        <div class="mt-4 text-center">
+            <p class="text-sm">&copy; 2026 StartMeow.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

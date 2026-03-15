@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ .ProjectName }} – Welcome</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen flex flex-col bg-gray-100">
+    <main class="flex-grow">
+        <header class="h-screen bg-gradient-to-br from-blue-600 to-indigo-500 text-white flex flex-col items-center justify-center text-center px-4">
+            <h1 class="text-5xl font-extrabold mb-4">Welcome to {{ .ProjectName }}</h1>
+            <p class="text-xl mb-6">Your product tagline goes here.</p>
+
+            <a href="#"
+               class="px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg shadow hover:bg-gray-100 transition">
+                Get Started
+            </a>
+        </header>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-6 rounded-lg">
+        <div class="container mx-auto flex justify-between">
+            <div>
+                <h4 class="font-semibold">Quick Links</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-gray-400">Home</a></li>
+                    <li><a href="#" class="hover:text-gray-400">Store</a></li>
+                    <li><a href="#" class="hover:text-gray-400">Download</a></li>
+                    <li><a href="#" class="hover:text-gray-400">Blog</a></li>
+                </ul>
+            </div>
+
+            <div class="flex space-x-4">
+                <a href="#" class="hover:text-gray-400">GitHub</a>
+                <a href="#" class="hover:text-gray-400">LinkedIn</a>
+                <a href="#" class="hover:text-gray-400">Twitter</a>
+            </div>
+        </div>
+
+        <div class="mt-4 text-center">
+            <p class="text-sm">&copy; 2026 StartMeow.</p>
+        </div>
+    </footer>
+</body>
+</html>
