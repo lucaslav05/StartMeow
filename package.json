@@ -19,15 +19,11 @@
     },
     "dependencies": {
         "go-npm": "^0.1.9"
-    }
+    },
 
     "goBinary": {
         "name": "start-meow",
         "path": "./StartMeow",
-        "url": "https://github.com/user/my-go-package/releases/download/v{{version}}/myGoPackage_{{version}}_{{platform}}_{{arch}}.tar.gz"
-    }
-}
-{
-    "postinstall": "go-npm install",
-    "preuninstall": "go-npm uninstall",
+        "url": "https://github.com/lucaslav05/StartMeow/archive/refs/tags/v0.0.5.tar.gz"
+    },
 }
