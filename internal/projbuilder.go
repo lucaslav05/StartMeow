@@ -9,13 +9,13 @@ func BuildProject(proj *Project) {
 
 	switch proj.ProjType {
 	case WebApp:
-		buildWebApp(proj)
+		BuildWebApp(proj)
 	case ClientServer:
-		buildClientServer(proj)
+		BuildClientServer(proj)
 	case Terminal:
-		buildTerminal(proj)
+		BuildTerminal(proj)
 	case Mobile:
-		buildMobile(proj)
+		BuildMobile(proj)
 	default:
 
 	}
@@ -30,7 +30,7 @@ func BuildWebApp(proj *Project) {
 
 		//Use npx to make, then replace page.tsx
 		case NextJS:
-			selections := makeTemplatePaths(proj)
+			selections := MakeTemplatePaths(proj)
 			exec.Command("npx", "create-next-app@latest")
 
 			//FIX THIS ONCE FUNCTION IS UPDATED!
@@ -42,7 +42,7 @@ func BuildWebApp(proj *Project) {
 
 		//Use npx to make, then replace page.tsx
 		case ReactRouter:
-			selections := makeTemplatePaths(proj)
+			selections := MakeTemplatePaths(proj)
 			exec.Command("npx", "create-react-router@latest", "--template", "remix-run/react-router-templates/minimal")
 
 			//FIX THIS ONCE FUNCTION IS UPDATED!
@@ -54,7 +54,7 @@ func BuildWebApp(proj *Project) {
 
 		//Use npx to make react client, then make server with manifest.json
 		case ExpressJs:
-			selections := makeTemplatePaths(proj)
+			selections := MakeTemplatePaths(proj)
 			exec.Command("npx", "create-react-app", "client")
 
 			//FIX THIS ONCE FUNCTION IS UPDATED!

@@ -1,4 +1,4 @@
-package style
+package internal
 
 import "charm.land/lipgloss/v2"
 
@@ -16,6 +16,7 @@ type MainStyle struct {
 	Options      lipgloss.Style
 	OptionSelect lipgloss.Style
 	InputField   lipgloss.Style
+	TabStyle     lipgloss.Style
 }
 
 func DefaultStyles() *MainStyle {
@@ -25,8 +26,32 @@ func DefaultStyles() *MainStyle {
 	m.Options = OptionsStyle()
 	m.OptionSelect = OptionSelectStyle()
 	m.InputField = InputFieldStyle()
+	m.TabStyle = TabStyle()
 
 	return m
+}
+
+func InputFieldStyle() lipgloss.Style {
+	s := lipgloss.NewStyle().
+		BorderForeground(
+			lipgloss.Color(Orange),
+		).
+		BorderStyle(lipgloss.NormalBorder()).
+		Padding(1).
+		Width(40)
+
+	return s
+}
+
+func TabStyle() lipgloss.Style {
+	s := lipgloss.NewStyle().
+		BorderForeground(
+			lipgloss.Color(Black),
+		).
+		BorderStyle(lipgloss.NormalBorder()).
+		Padding(1, 3)
+
+	return s
 }
 
 func TitleStyle() lipgloss.Style {
@@ -52,18 +77,6 @@ func OptionSelectStyle() lipgloss.Style {
 		Foreground(
 			lipgloss.Color(LightOrange),
 		)
-
-	return s
-}
-
-func InputFieldStyle() lipgloss.Style {
-	s := lipgloss.NewStyle().
-		BorderForeground(
-			lipgloss.Color(Orange),
-		).
-		BorderStyle(lipgloss.NormalBorder()).
-		Padding(1).
-		Width(80)
 
 	return s
 }
