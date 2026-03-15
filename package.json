@@ -1,29 +1,30 @@
 {
-    "name": "startmeow",
-    "version": "1.0.0",
-    "description": "",
-    "homepage": "https://github.com/lucaslav05/StartMeow#readme",
-    "bugs": {
-        "url": "https://github.com/lucaslav05/StartMeow/issues"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/lucaslav05/StartMeow.git"
-    },
-    "license": "ISC",
-    "author": "",
-    "type": "commonjs",
-    "main": "index.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "dependencies": {
-        "go-npm": "^0.1.9"
-    },
-
-    "goBinary": {
-        "name": "start-meow",
-        "path": "./StartMeow",
-        "url": "https://github.com/lucaslav05/StartMeow/archive/refs/tags/v0.0.5.tar.gz"
-    },
+  "name": "startmeow",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/lucaslav05/StartMeow#readme",
+  "bugs": {
+    "url": "https://github.com/lucaslav05/StartMeow/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucaslav05/StartMeow.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "go-npm install",
+    "preuninstall": "go-npm uninstall"
+  },
+  "goBinary": {
+    "name": "command-name",
+    "path": "./bin",
+    "url": "https://github.com/lucaslav05/StartMeow/releases/download/v0.1.0/startmeow_0.1.0_linux_amd64.tar.gz"
+  },
+  "dependencies": {
+    "golang-npm": "^0.0.6"
+  }
 }

@@ -1,8 +1,10 @@
 # .goreleaser.yml
 # Build customization
 builds:
-  - binary: StartMeow
+  - binary: startmeow
     goos:
+      - windows
+      - darwin
       - linux
     goarch:
       - amd64
