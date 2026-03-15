@@ -2,7 +2,7 @@ package internal
 
 func buildProject(proj *Project) {
 
-	switch proj.projType {
+	switch proj.ProjType {
 	case WebApp:
 		buildWebApp(proj)
 	case ClientServer:

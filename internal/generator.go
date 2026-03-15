@@ -69,10 +69,9 @@ func GenerateProject(ctx Context) error {
 
     // Check if directory exists
     if _, err := os.Stat(ctx.ProjectName); err == nil && !ctx.Force {
-        return fmt.Errorf("directory %s already exists (use --force to overwrite)")
+        return fmt.Errorf("directory %s already exists (use --force to overwrite)", ctx.ProjectName)
     }
 
-    // Debug
     fmt.Println("Using template:", ctx.Template)
     fmt.Println("Template directory:", templateDir)
     fmt.Println("Manifest path:", manifestPath)
@@ -82,7 +81,7 @@ func GenerateProject(ctx Context) error {
         srcPath := filepath.Join(templateDir, src)
         destPath := filepath.Join(ctx.ProjectName, dest)
 
-        if err := RenderTemplate(srcPath, destPath, ctx); err != nil{
+        if err := RenderTemplate(srcPath, destPath, ctx); err != nil {
             return err
         }
     }
@@ -90,36 +89,12 @@ func GenerateProject(ctx Context) error {
     return nil
 }
 
-func GenerateManifest(selections []string, outputPath string) error {
+
+func GenerateManifest(fileMap map[string]string, outputPath string) error {
     manifest := Manifest{Files: make(map[string]string)}
 
-    for _, sel := range selections {
-        templateDir := filepath.Join("templates/test", sel)
-
-        err := filepath.WalkDir(templateDir, func(path string, d fs.DirEntry, err error) error {
-            if err != nil {
-                return err
-            }
-            if d.IsDir() {
-                return nil
-            }
-            if !strings.HasSuffix(path, ".tmpl") {
-                return nil
-            }
-
-            rel, err := filepath.Rel(templateDir, path)
-            if err != nil {
-                return err
-            }
-
-            dest := strings.TrimSuffix(rel, ".tmpl")
-            manifest.Files[path] = dest
-            return nil
-        })
-
-        if err != nil {
-            return err
-        }
+    for src, dest := range fileMap {
+        manifest.Files[src] = dest
     }
 
     // Convert manifest to JSON
