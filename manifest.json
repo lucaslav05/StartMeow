@@ -1,0 +1,7 @@
+{
+  "Files": {
+    "templates/backend/mongo/.env.tmpl": "test-project/.env",
+    "templates/backend/mongo/database.js.tmpl": "test-project/database.js",
+    "templates/ui/download/page.tsx.tmpl": "test-project/app/page.tsx"
+  }
+}

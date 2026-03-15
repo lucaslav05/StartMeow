@@ -2,9 +2,42 @@ package main
 
 import (
 	"StartMeow/internal"
+	"embed"
+	"html/template"
+	"io/fs"
+	"log"
+	"path/filepath"
 )
 
+//go:embed all:templates
+var templateFS embed.FS
+
 func main() {
+	walk := func(fsys embed.FS) *internal.Templates {
+		t := template.New("")
+
+		err := fs.WalkDir(fsys, "templates", func(path string, d fs.DirEntry, err error) error {
+			if err != nil {
+				return err
+			}
+			if !d.IsDir() && filepath.Ext(path) == ".tmpl" {
+				contents, err := fsys.ReadFile(path)
+				if err != nil {
+					return err
+				}
+				template.Must(t.New(path).Parse(string(contents)))
+			}
+			return nil
+		})
+		if err != nil {
+			log.Fatalf("failed to parse templates: %v", err)
+		}
+
+		return &internal.Templates{T: t}
+	}
+
+	tmpl := walk(templateFS)
+
 	// f, err := tea.LogToFile("debug.log", "debug")
 	// if err != nil {
 	// 	log.Fatal(err)
@@ -37,7 +70,7 @@ func main() {
 		ProjName:   "test-project",
 	}
 
-	internal.BuildProject(&testProj)
+	internal.BuildProject(&testProj, *tmpl)
 
 	// 	type Project struct {
 	// 	ProjType   ProjectType

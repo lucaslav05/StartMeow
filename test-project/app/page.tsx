@@ -1,0 +1,49 @@
+import Image from "next/image";
+
+export default function Home() {
+  return (
+<div className="min-h-screen flex flex-col bg-gray-100 p-8">
+
+    <header className="mb-12 text-center">
+        <h1 className="text-5xl font-extrabold">Download test-project</h1>
+        <p className="text-gray-600 text-lg mt-2">Get the latest version below.</p>
+    </header>
+
+    <main className="flex-grow flex flex-col items-center justify-center space-y-6">
+        <p className="text-gray-700 max-w-xl text-center">
+            Click the button below to download the newest release of test-project.
+        </p>
+
+        <a href="#"
+           className="px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
+            Download Now
+        </a>
+    </main>
+
+    <footer className="bg-gray-800 text-white py-6 rounded-lg">
+        <div className="container mx-auto flex justify-between">
+            <div>
+                <h4 className="font-semibold">Quick Links</h4>
+                <ul className="space-y-2">
+                    <li><a href="#" className="hover:text-gray-400">Home</a></li>
+                    <li><a href="#" className="hover:text-gray-400">Store</a></li>
+                    <li><a href="#" className="hover:text-gray-400">Download</a></li>
+                    <li><a href="#" className="hover:text-gray-400">Blog</a></li>
+                </ul>
+            </div>
+
+            <div className="flex space-x-4">
+                <a href="#" className="hover:text-gray-400">GitHub</a>
+                <a href="#" className="hover:text-gray-400">LinkedIn</a>
+                <a href="#" className="hover:text-gray-400">Twitter</a>
+            </div>
+        </div>
+
+        <div className="mt-4 text-center">
+            <p className="text-sm">&copy; 2026 StartMeow.</p>
+        </div>
+    </footer>
+
+</div>
+  );
+}

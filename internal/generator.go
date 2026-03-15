@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -55,7 +56,7 @@ func RenderTemplate(src, dest string, ctx Context) error {
 	return tmpl.Execute(f, ctx)
 }
 
-func GenerateProject(ctx Context) error {
+func GenerateProject(ctx Context, templates Templates) error {
 	// Load the generated Manifest file
 	pwd, err := os.Getwd()
 	if err != nil {
@@ -76,10 +77,19 @@ func GenerateProject(ctx Context) error {
 
 		srcPath := src
 		destPath := filepath.Join(pwd, dest)
-		fmt.Println(destPath)
 
-		if err := RenderTemplate(srcPath, destPath, ctx); err != nil {
-			return err
+		// Use a buffer as the io.Writer so output is actually captured
+		var buf bytes.Buffer
+		if err := templates.T.ExecuteTemplate(&buf, srcPath, ctx); err != nil {
+			return fmt.Errorf("failed to execute template %s: %w", srcPath, err)
+		}
+
+		// Write the rendered buffer to the destination file
+		if err := os.MkdirAll(filepath.Dir(destPath), 0755); err != nil {
+			return fmt.Errorf("failed to create directories for %s: %w", destPath, err)
+		}
+		if err := os.WriteFile(destPath, buf.Bytes(), 0644); err != nil {
+			return fmt.Errorf("failed to write file %s: %w", destPath, err)
 		}
 	}
 

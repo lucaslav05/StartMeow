@@ -3,17 +3,18 @@ package internal
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"strings"
 )
 
-func BuildProject(proj *Project) {
+func BuildProject(proj *Project, templates Templates) {
 
 	switch proj.ProjType {
 	case WebApp:
 		fmt.Println("Building Web App")
-		BuildWebApp(proj)
+		BuildWebApp(proj, templates)
 	case ClientServer:
 		BuildClientServer(proj)
 	case Terminal:
@@ -26,7 +27,7 @@ func BuildProject(proj *Project) {
 
 }
 
-func BuildWebApp(proj *Project) {
+func BuildWebApp(proj *Project, templates Templates) {
 	pwd, err := os.Getwd()
 	if err != nil {
 		fmt.Println(err)
@@ -40,7 +41,7 @@ func BuildWebApp(proj *Project) {
 
 		//Use npx to make, then replace page.tsx
 		case NextJS:
-			selections := MakeTemplatePaths(proj)
+			selections := MakeTemplatePaths(proj, templates)
 			build := exec.Command("npx", "create-next-app@latest", proj.ProjName)
 
 			buffer := bytes.Buffer{}
@@ -61,11 +62,11 @@ func BuildWebApp(proj *Project) {
 			var context = makeContext(proj)
 
 			fmt.Println("Making Project!!")
-			GenerateProject(context)
+			GenerateProject(context, templates)
 
 		//Use npx to make, then replace page.tsx
 		case ReactRouter:
-			selections := MakeTemplatePaths(proj)
+			selections := MakeTemplatePaths(proj, templates)
 			build := exec.Command("npx", "create-react-router@latest", "--template", "remix-run/react-router-templates/minimal", fmt.Sprint("./"+proj.ProjName))
 
 			buffer := bytes.Buffer{}
@@ -89,11 +90,11 @@ func BuildWebApp(proj *Project) {
 
 			var context = makeContext(proj)
 
-			GenerateProject(context)
+			GenerateProject(context, templates)
 
 		//Use npx to make react client, then make server with manifest.json
 		case ExpressJs:
-			selections := MakeTemplatePaths(proj)
+			selections := MakeTemplatePaths(proj, templates)
 			build := exec.Command("npx", "create-react-app", "client")
 
 			build.Stdout = os.Stdout
@@ -109,7 +110,7 @@ func BuildWebApp(proj *Project) {
 
 			var context = makeContext(proj)
 
-			GenerateProject(context)
+			GenerateProject(context, templates)
 
 		default:
 		}
@@ -132,7 +133,7 @@ func BuildMobile(proj *Project) {
 
 }
 
-func MakeTemplatePaths(proj *Project) map[string]string {
+func MakeTemplatePaths(proj *Project, templates Templates) map[string]string {
 	fmt.Println("Building Map")
 
 	mapping := make(map[string]string)
@@ -144,6 +145,11 @@ func MakeTemplatePaths(proj *Project) map[string]string {
 			switch proj.BackFrame {
 
 			case NextJS:
+				var data string
+				var w io.Writer
+				err := templates.T.ExecuteTemplate(w, "templates/yourfile.tmpl", data)
+				_ = err
+				fmt.Println(strings.Split(data, ""))
 				mapping[fmt.Sprintf("templates/ui/%s/page.tsx.tmpl", strings.ToLower(proj.Ui.String()))] = fmt.Sprintf("%s/app/page.tsx", proj.ProjName)
 
 				switch proj.Database {
