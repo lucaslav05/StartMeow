@@ -2,60 +2,33 @@ package main
 
 import (
 	"fmt"
-	// 	tea "charm.land/bubbletea/v2"
-	"StartMeow/internal"
+	"log"
+	"os"
+
+	models "StartMeow/internal/tui/models"
+
+	tea "charm.land/bubbletea/v2"
 )
 
-func usage() {
-	fmt.Println("Usage: StartMeow <project-name> [--force]")
-}
-
 func main() {
-
-	q := internal.InitQueue()
-
-	q.Enqueue("1")
-	q.Enqueue("2")
-	q.Enqueue("3")
-	q.Enqueue("4")
-
-	fmt.Println("Initial", q)
-
-	q.Dequeue()
-	q.Dequeue()
-	fmt.Println("After", q)
-
-	// cmd := exec.Command("git", "branch", "--show-current")
-	// stdout, err := cmd.Output()
-
-	// if err != nil {
-	// 	fmt.Println(err.Error())
-	// 	return
-	// }
-
-	// fmt.Println(string(stdout))
-
-		//test manifest genereation
-	// selections := []string{"webapp", "express", "homepage", "storepage", "aboutus"}
-	// err := internal.GenerateManifest(selections, "manifest.json")
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// fmt.Println("Manifest created at manifest.json")
-
-
-	//test replacing page.tsx in react app
-	ctx := internal.Context{
-    	ProjectName: "my-app",   // folder created by npx
-    	Template: "ui/download", // folder inside templates
-    	Force: true,
-	}
-
-	err := internal.GenerateProject(ctx)
+	f, err := tea.LogToFile("debug.log", "debug")
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
-	fmt.Println("Generated page.tsx into my-app")
+	defer f.Close()
 
+	questions := []models.Question{
+		models.NewQuestion("Select a language", models.Select, []string{"C", "C#", "Java", "JavaScript"}),
+		models.NewQuestion("Insert project name", models.Prompt, []string{}),
+		models.NewQuestion("Verify project structure", models.Verify, []string{}),
+	}
+
+	m := models.NewDefaultModel(questions)
+
+	p := tea.NewProgram(m)
+	if _, err := p.Run(); err != nil {
+		fmt.Printf("Error occurred: %v", err)
+		os.Exit(1)
+	}
 }
