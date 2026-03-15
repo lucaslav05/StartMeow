@@ -35,10 +35,27 @@ func main() {
 
 	// fmt.Println(string(stdout))
 
-	selections := []string{"webapp", "express", "homepage", "storepage", "aboutus"}
-	err := internal.GenerateManifest(selections, "manifest.json")
+		//test manifest genereation
+	// selections := []string{"webapp", "express", "homepage", "storepage", "aboutus"}
+	// err := internal.GenerateManifest(selections, "manifest.json")
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// fmt.Println("Manifest created at manifest.json")
+
+
+	//test replacing page.tsx in react app
+	ctx := internal.Context{
+    	ProjectName: "my-app",   // folder created by npx
+    	Template: "ui/download", // folder inside templates
+    	Force: true,
+	}
+
+	err := internal.GenerateProject(ctx)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("Manifest created at manifest.json")
+
+	fmt.Println("Generated page.tsx into my-app")
+
 }
