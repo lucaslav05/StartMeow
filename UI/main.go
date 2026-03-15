@@ -10,7 +10,7 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
-func NewQuestion(question string, qtype int, options []string) models.Question {
+func NewQuestion(question string, qtype models.QuestionType, options []string) models.Question {
 	return models.Question{QuestionType: qtype, Question: question, Options: options, OptionIndex: 0}
 }
 
