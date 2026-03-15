@@ -1,28 +1,20 @@
 {
   "name": "startmeow",
-  "version": "1.0.0",
-  "description": "CLI Tool for base project generation.",
-  "keywords": [
-    "CLI",
-    "Project",
-    "Project",
-    "Generation",
-    "Baseline"
-  ],
-  "homepage": "https://github.com/lucaslav05/StartMeow#readme",
-  "bugs": {
-    "url": "https://github.com/lucaslav05/StartMeow/issues"
+  "version": "0.1.2",
+  "description": "StartMeow CLI distributed via npm",
+  "bin": {
+    "startmeow": "./bin/startmeow"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/lucaslav05/StartMeow.git"
-  },
-  "license": "ISC",
-  "author": "Lucas",
-  "type": "module",
-  "main": "main.go",
   "scripts": {
-    "build": "go build",
-    "test": "go run main.go"
+    "postinstall": "go-npm install",
+    "preuninstall": "go-npm uninstall"
+  },
+  "goBinary": {
+    "name": "startmeow",
+    "path": "./bin",
+    "url": "https://github.com/lucaslav05/StartMeow/releases/download/v{{version}}/startmeow_{{version}}_{{platform}}_{{arch}}.tar.gz"
+  },
+  "dependencies": {
+    "go-npm": "^0.1.7"
   }
 }
