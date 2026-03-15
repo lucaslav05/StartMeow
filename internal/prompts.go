@@ -101,11 +101,11 @@ var WhichLanguage = Prompt{
 	Question:   "Choose a language for your backend",
 	PromptType: Select,
 	Options: []string{
-		"c",
+		"C",
 		"Javascript",
 		"Typescript",
 		"Go",
-		"c++",
+		"C++",
 		"Java",
 		"Swift",
 		"Kotlin",
@@ -132,7 +132,7 @@ var WhichDB = Prompt{
 	PromptType: Select,
 	Options: []string{
 		"MongoDB",
-		"Firebase",
 		"SQLite",
+		"None",
 	},
 }

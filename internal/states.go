@@ -63,11 +63,11 @@ var BackendFrameworkState = state{
 var WhichLanguageState = state{
 	prompts: []Prompt{WhichLanguage},
 	answers: map[string]state{
-		"c":          StarterUIState,
+		"C":          StarterUIState,
 		"Javascript": StarterUIState,
 		"Typescript": StarterUIState,
 		"Go":         StarterUIState,
-		"c++":        StarterUIState,
+		"C++":        StarterUIState,
 		"Java":       StarterUIState,
 		"Swift":      StarterUIState,
 		"Kotlin":     StarterUIState,
@@ -79,9 +79,9 @@ var WhichLanguageState = state{
 var WhichDBState = state{
 	prompts: []Prompt{WhichDB},
 	answers: map[string]state{
-		"MongoDB":  emptyState,
-		"Firebase": emptyState,
-		"SQLite":   emptyState,
+		"MongoDB": emptyState,
+		"SQLite":  emptyState,
+		"None":    emptyState,
 	},
 }
 
