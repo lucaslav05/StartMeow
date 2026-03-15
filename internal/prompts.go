@@ -28,13 +28,13 @@ func StateRouter(promptqueue *Queue, answer Prompt) Prompt {
 	}
 
 	// the no react route
-	if answer.Input == "no" && projectState.prompts[0].Question == FrontendState.prompts[0].Question {
+	if answer.Input == "no" && projectState.prompts[0].Question == "Choose a backend framework" {
 		fmt.Println("Case 2")
 		promptqueue.Enqueue(BackendFramework)
 	}
 
 	// no react no backend framework
-	if answer.Input == "None" && projectState.prompts[0].Question == BackendFrameworkState.prompts[0].Question {
+	if answer.Input == "None" && projectState.prompts[0].Question == "Choose a language for your backend" {
 		fmt.Println("Case 3")
 		promptqueue.Enqueue(WhichLanguage)
 		promptqueue.Enqueue(StartingUI)
