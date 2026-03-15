@@ -3,8 +3,6 @@ package internal
 type ProjectType int
 type Framework int
 type Language int
-type FrontLang int
-type MobileLang int
 type UserInterface int
 type PromptType int
 type Database int
@@ -18,8 +16,10 @@ const (
 
 const (
 	React Framework = iota
-	Express
-	None
+	ExpressJs
+	NodeJS
+	NextJS
+	ReactRouter
 )
 
 const (
@@ -29,15 +29,7 @@ const (
 	Go
 	CPlusPlus
 	Java
-)
-
-const (
-	Js FrontLang = iota
-	Ts
-)
-
-const (
-	Swift MobileLang = iota
+	Swift
 	Kotlin
 	CSharp
 	Jsx
@@ -64,10 +56,10 @@ const (
 
 type Project struct {
 	projType   ProjectType
-	framework  Framework
-	frontLang  FrontLang
-	language   Language
-	mobileLang MobileLang
+	frontFrame Framework
+	backFrame  Framework
+	frontLang  Language
+	backLang   Language
 	ui         UserInterface
 	database   Database
 	projName   string
