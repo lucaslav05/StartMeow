@@ -1,4 +1,4 @@
-package models
+package internal
 
 import (
 	style "StartMeow/internal/tui/styles"
