@@ -26,7 +26,7 @@ type model struct {
 	help        help.Model
 	keys        help.KeyMap
 	queue       internal.Queue
-	pStruct     internal.Project
+	pStruct     *internal.Project
 }
 
 func (m model) Init() tea.Cmd {
@@ -52,6 +52,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "enter":
 			// if we are at the end of the form, do not go to next
 			if currentQ.Prompt.PromptType == internal.Info {
+				m.pStruct.ProjName = "test"
+				// internal.BuildProject(m.pStruct)
 				return m, tea.Quit
 			}
 
@@ -59,7 +61,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			answerPrompt := internal.Prompt{Question: currentQ.Prompt.Question,
 				PromptType: currentQ.Prompt.PromptType,
 				Input:      currentQ.Prompt.Options[currentQ.OptionIndex]}
-			nextP := internal.StateRouter(&m.queue, answerPrompt, &m.pStruct)
+			nextP := internal.StateRouter(&m.queue, answerPrompt, m.pStruct)
 
 			// add next question it to list
 			nextQ := NewQuestionFromPrompt(nextP)
@@ -257,7 +259,7 @@ func (m *model) ClearAnswers() {
 	}
 }
 
-func NewDefaultModel(questions []Question, queue internal.Queue) *model {
+func NewDefaultModel(questions []Question, queue internal.Queue, pStruct *internal.Project) *model {
 	mainStyle := style.DefaultStyles()
 
 	answerField := textinput.New()
@@ -271,6 +273,6 @@ func NewDefaultModel(questions []Question, queue internal.Queue) *model {
 		keys:        keys,
 		help:        help.New(),
 		queue:       queue,
-		pStruct:     internal.Project{},
+		pStruct:     pStruct,
 	}
 }

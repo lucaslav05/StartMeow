@@ -20,7 +20,7 @@ func InitPrompts() Queue {
 
 func StateRouter(promptqueue *Queue, answer Prompt, pStruct *Project) Prompt {
 	// first split decision (frontend into react or null)
-	log.Println(projectState.prompts[0].Question)
+	log.Println(answer)
 	// decided to compare questions because they are unique (pray to God)
 	if answer.Input == "yes" && answer.Question == FrontendFrameworkType.Question {
 		// fmt.Println("Case 1")
@@ -40,7 +40,6 @@ func StateRouter(promptqueue *Queue, answer Prompt, pStruct *Project) Prompt {
 		promptqueue.Enqueue(WhichDB)
 		//end of config section
 	} else if answer.Question == BackendFramework.Question {
-
 		promptqueue.Enqueue(StartingUI)
 		promptqueue.Enqueue(WhichDB)
 	} else {
@@ -56,13 +55,14 @@ func StateRouter(promptqueue *Queue, answer Prompt, pStruct *Project) Prompt {
 }
 
 func UpdateProjectStruct(answer Prompt, pStruct *Project) {
+	log.Println(answer.Question)
 	switch answer.Question {
 	case FrontendFrameworkType.Question:
 		t, _ := ResolveFramework(answer.Input)
 		pStruct.FrontFrame = t
-	case BackendFramework.Question:
+	case BackendFrameworkReact.Question:
 		t, _ := ResolveFramework(answer.Input)
-		pStruct.FrontFrame = t
+		pStruct.BackFrame = t
 	case WhichLanguage.Question:
 		t, _ := ResolveLanguage(answer.Input)
 		pStruct.BackLang = t
