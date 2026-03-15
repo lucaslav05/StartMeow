@@ -94,7 +94,7 @@ func GenerateManifest(selections []string, outputPath string) error {
     manifest := Manifest{Files: make(map[string]string)}
 
     for _, sel := range selections {
-        templateDir := filepath.Join("templates/test", sel)
+        templateDir := filepath.Join("templates", sel)
 
         err := filepath.WalkDir(templateDir, func(path string, d fs.DirEntry, err error) error {
             if err != nil {
