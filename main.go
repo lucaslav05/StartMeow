@@ -21,15 +21,20 @@ func main() {
 	q := internal.InitPrompts()
 	initialP := q.Dequeue()
 
+	pStruct := internal.Project{}
+
 	questions := []models.Question{models.NewQuestion(initialP.Question, initialP.PromptType, initialP.Options)}
 
-	m := models.NewDefaultModel(questions, q)
+	m := models.NewDefaultModel(questions, q, &pStruct)
 
 	p := tea.NewProgram(m)
 	if _, err := p.Run(); err != nil {
-		fmt.Printf("Error occurred: %v", err)
+		log.Printf("Error occurred: %v\n", err)
 		os.Exit(1)
 	}
+
+	fmt.Println(pStruct)
+	internal.BuildProject(&pStruct)
 
 	// testProj := internal.Project{
 	// 	ProjType:   internal.WebApp,
@@ -41,8 +46,6 @@ func main() {
 	// 	Database:   internal.MongoDB,
 	// 	ProjName:   "test-project",
 	// }
-
-	// internal.BuildProject(&testProj)
 
 	// 	type Project struct {
 	// 	ProjType   ProjectType
