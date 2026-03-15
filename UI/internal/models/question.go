@@ -1,5 +1,11 @@
 package models
 
+const (
+	Select = iota
+	Prompt
+	Verify
+)
+
 type Question struct {
 	QuestionType int
 	Question     string
