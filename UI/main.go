@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	models "StartMeow/internal/models"
 	style "StartMeow/internal/styles"
 
 	"charm.land/bubbles/v2/textinput"
@@ -29,7 +30,7 @@ const (
 
 type model struct {
 	history     []string
-	questions   []Question
+	questions   []models.Question
 	answerField textinput.Model
 	index       int
 	width       int
@@ -40,19 +41,11 @@ type model struct {
 type OptionType struct {
 }
 
-type Question struct {
-	questionType int
-	question     string
-	options      []string
-	optionIndex  int
-	answer       string
+func NewQuestion(question string, qtype int, options []string) models.Question {
+	return models.Question{QuestionType: qtype, Question: question, Options: options, OptionIndex: 0}
 }
 
-func NewQuestion(question string, qtype int, options []string) Question {
-	return Question{questionType: qtype, question: question, options: options, optionIndex: 0}
-}
-
-func DefaultModel(questions []Question) *model {
+func DefaultModel(questions []models.Question) *model {
 	mainStyle := style.DefaultStyles()
 
 	answerField := textinput.New()
@@ -84,7 +77,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		case "enter":
 			m.Next()
-			current.answer = m.answerField.Value()
+			current.Answer = m.answerField.Value()
 			m.SetAnswerValue()
 			return m, nil
 		case "up":
@@ -92,12 +85,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "down":
 			current.Next()
 		case "y":
-			if current.questionType == Verify {
+			if current.QuestionType == Verify {
 				log.Println("Verified!")
 				return m, tea.Quit
 			}
 		case "n":
-			if current.questionType == Verify {
+			if current.QuestionType == Verify {
 				m.ClearAnswers()
 				m.Next()
 			}
@@ -112,12 +105,12 @@ func (m model) View() tea.View {
 
 	currentQuestion := m.questions[m.index]
 
-	switch currentQuestion.questionType {
+	switch currentQuestion.QuestionType {
 	// current question is prompt
 	case Prompt:
 		l = lipgloss.JoinVertical(
 			lipgloss.Center,
-			m.styles.Title.Render(m.questions[m.index].question),
+			m.styles.Title.Render(m.questions[m.index].Question),
 			m.styles.InputField.Render(
 				m.answerField.View(),
 			),
@@ -128,7 +121,7 @@ func (m model) View() tea.View {
 		// log.Println("Case: Select")
 		l = lipgloss.JoinVertical(
 			lipgloss.Left,
-			m.styles.Title.Render(m.questions[m.index].question),
+			m.styles.Title.Render(m.questions[m.index].Question),
 			m.ViewSelect(),
 		)
 
@@ -136,7 +129,7 @@ func (m model) View() tea.View {
 		// current question is verify
 		l = lipgloss.JoinVertical(
 			lipgloss.Left,
-			m.styles.Title.Render(m.questions[m.index].question),
+			m.styles.Title.Render(m.questions[m.index].Question),
 			m.ViewVerify(),
 		)
 	}
@@ -156,24 +149,8 @@ func (m *model) Next() {
 	}
 }
 
-func (q *Question) Next() {
-	if q.optionIndex < len(q.options)-1 {
-		q.optionIndex++
-	} else {
-		q.optionIndex = 0
-	}
-}
-
-func (q *Question) Prev() {
-	if q.optionIndex > 0 {
-		q.optionIndex--
-	} else {
-		q.optionIndex = len(q.options) - 1
-	}
-}
-
 func (m *model) SetAnswerValue() {
-	currentAnswer := m.questions[m.index].answer
+	currentAnswer := m.questions[m.index].Answer
 
 	if currentAnswer != "" {
 		m.answerField.SetValue(currentAnswer)
@@ -186,15 +163,15 @@ func (m *model) ClearAnswers() {
 	q := m.questions
 
 	for i := range q {
-		q[i].answer = ""
+		q[i].Answer = ""
 	}
 }
 
 func (m model) ViewSelect() string {
 	var rows []string
 	currentQuestion := m.questions[m.index]
-	options := currentQuestion.options
-	optionIndex := currentQuestion.optionIndex
+	options := currentQuestion.Options
+	optionIndex := currentQuestion.OptionIndex
 
 	for i, v := range options {
 		if optionIndex == i {
@@ -212,11 +189,11 @@ func (m *model) ViewVerify() string {
 
 	for _, v := range m.questions {
 		var s string
-		switch v.questionType {
+		switch v.QuestionType {
 		case Select:
-			s = fmt.Sprintf("%s: %s", m.styles.Title.Render(v.question), m.styles.OptionSelect.Render(v.options[v.optionIndex]))
+			s = fmt.Sprintf("%s: %s", m.styles.Title.Render(v.Question), m.styles.OptionSelect.Render(v.Options[v.OptionIndex]))
 		case Prompt:
-			s = fmt.Sprintf("%s: %s", m.styles.Title.Render(v.question), m.styles.OptionSelect.Render(v.answer))
+			s = fmt.Sprintf("%s: %s", m.styles.Title.Render(v.Question), m.styles.OptionSelect.Render(v.Answer))
 		}
 
 		if s != "" {
@@ -238,7 +215,7 @@ func main() {
 
 	defer f.Close()
 
-	questions := []Question{
+	questions := []models.Question{
 		NewQuestion("Select a language", Select, []string{"C", "C#", "Java", "JavaScript"}),
 		NewQuestion("Insert project name", Prompt, []string{}),
 		NewQuestion("Verify project structure", Verify, []string{}),
