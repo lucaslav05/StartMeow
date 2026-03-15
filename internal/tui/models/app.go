@@ -6,9 +6,11 @@ import (
 	"fmt"
 	"strings"
 
+	"charm.land/bubbles/v2/help"
 	"charm.land/bubbles/v2/textinput"
-	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
+
+	tea "charm.land/bubbletea/v2"
 )
 
 type model struct {
@@ -17,8 +19,11 @@ type model struct {
 	height int
 
 	questions   []Question // list of questions
+	project     internal.Project
 	qIndex      int
 	answerField textinput.Model
+	help        help.Model
+	keys        help.KeyMap
 }
 
 func (m model) Init() tea.Cmd {
@@ -36,13 +41,15 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case tea.KeyPressMsg:
 		switch msg.String() {
+		case "?":
+			m.help.ShowAll = !m.help.ShowAll
 		case "ctrl+c":
 			return m, tea.Quit
 
 		case "enter":
 			// if we are at the end of the form, do not go to next
 			if currentQ.Prompt.PromptType == internal.Info {
-				return m, nil
+				return m, tea.Quit
 			}
 
 			m.NextQuestion()
@@ -116,7 +123,9 @@ func (m model) View() tea.View {
 		)
 	}
 
-	v := tea.NewView(l)
+	helpView := m.styles.Title.Render(m.help.View(m.keys))
+
+	v := tea.NewView(l + strings.Repeat("\n", 2) + helpView)
 	v.BackgroundColor = lipgloss.Color(style.BackgroundBlack)
 	v.AltScreen = true
 	return v
@@ -156,7 +165,7 @@ func (m model) ViewVerify() string {
 		}
 	}
 
-	s := "\nConfirm project? (Y/N):"
+	s := "\nConfirm project? (Y/n):"
 	rows = append(rows, s)
 
 	return strings.Join(rows, "\n")
@@ -207,5 +216,7 @@ func NewDefaultModel(questions []Question) *model {
 		questions:   questions,
 		answerField: answerField,
 		styles:      mainStyle,
+		keys:        keys,
+		help:        help.New(),
 	}
 }
