@@ -4,7 +4,6 @@ import (
 	"StartMeow/internal"
 	style "StartMeow/internal/tui/styles"
 	"fmt"
-	"log"
 	"strings"
 
 	"charm.land/bubbles/v2/textinput"
@@ -13,13 +12,13 @@ import (
 )
 
 type model struct {
-	history     []string
-	questions   []Question
+	styles *style.MainStyle
+	width  int
+	height int
+
+	questions   []Question // list of questions
+	qIndex      int
 	answerField textinput.Model
-	index       int
-	width       int
-	height      int
-	styles      *style.MainStyle
 }
 
 func (m model) Init() tea.Cmd {
@@ -28,34 +27,54 @@ func (m model) Init() tea.Cmd {
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
-	current := &m.questions[m.index]
+	currentQ := &m.questions[m.qIndex] // get current question
 
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
 		m.height = msg.Height
+
 	case tea.KeyPressMsg:
 		switch msg.String() {
 		case "ctrl+c":
 			return m, tea.Quit
+
 		case "enter":
-			m.Next()
-			current.Prompt.Input = m.answerField.Value()
+			// if we are at the end of the form, do not go to next
+			if currentQ.Prompt.PromptType == internal.Info {
+				return m, nil
+			}
+
+			m.NextQuestion()
+			currentQ.Prompt.Input = m.answerField.Value()
 			m.SetAnswerValue()
 			return m, nil
+
 		case "up":
-			current.Prev()
+			// if select form, then move option index
+			if currentQ.Prompt.PromptType == internal.Select {
+				currentQ.PrevOption()
+				return m, nil
+			}
+
 		case "down":
-			current.Next()
+			// if select form, then move option index
+			if currentQ.Prompt.PromptType == internal.Select {
+				currentQ.NextOption()
+				return m, nil
+			}
+
 		case "y":
-			if current.Prompt.PromptType == internal.Info {
-				log.Println("Verified!")
+			// if we are at the end of the form, make Y a command
+			if currentQ.Prompt.PromptType == internal.Info {
 				return m, tea.Quit
 			}
+
 		case "n":
-			if current.Prompt.PromptType == internal.Info {
+			// if we are at the end of the form, make N a command
+			if currentQ.Prompt.PromptType == internal.Info {
 				m.ClearAnswers()
-				m.Next()
+				m.NextQuestion()
 			}
 		}
 	}
@@ -66,14 +85,14 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m model) View() tea.View {
 	var l string
 
-	currentQuestion := m.questions[m.index]
+	currentQuestion := m.questions[m.qIndex]
 
 	switch currentQuestion.Prompt.PromptType {
 	// current question is prompt
 	case internal.Field:
 		l = lipgloss.JoinVertical(
 			lipgloss.Center,
-			m.styles.Title.Render(m.questions[m.index].Prompt.Question),
+			m.styles.Title.Render(m.questions[m.qIndex].Prompt.Question),
 			m.styles.InputField.Render(
 				m.answerField.View(),
 			),
@@ -84,7 +103,7 @@ func (m model) View() tea.View {
 		// log.Println("Case: Select")
 		l = lipgloss.JoinVertical(
 			lipgloss.Left,
-			m.styles.Title.Render(m.questions[m.index].Prompt.Question),
+			m.styles.Title.Render(m.questions[m.qIndex].Prompt.Question),
 			m.ViewSelect(),
 		)
 
@@ -92,13 +111,12 @@ func (m model) View() tea.View {
 		// current question is verify
 		l = lipgloss.JoinVertical(
 			lipgloss.Left,
-			m.styles.Title.Render(m.questions[m.index].Prompt.Question),
+			m.styles.Title.Render(m.questions[m.qIndex].Prompt.Question),
 			m.ViewVerify(),
 		)
 	}
 
-	m.history = append(m.history, l)
-	v := tea.NewView(strings.Join(m.history, "\n"))
+	v := tea.NewView(l)
 	v.BackgroundColor = lipgloss.Color(style.BackgroundBlack)
 	v.AltScreen = true
 	return v
@@ -106,7 +124,7 @@ func (m model) View() tea.View {
 
 func (m model) ViewSelect() string {
 	var rows []string
-	currentQuestion := m.questions[m.index]
+	currentQuestion := m.questions[m.qIndex]
 	options := currentQuestion.Prompt.Options
 	optionIndex := currentQuestion.OptionIndex
 
@@ -144,24 +162,24 @@ func (m model) ViewVerify() string {
 	return strings.Join(rows, "\n")
 }
 
-func (m *model) Next() {
-	if m.index < len(m.questions)-1 {
-		m.index++
+func (m *model) NextQuestion() {
+	if m.qIndex < len(m.questions)-1 {
+		m.qIndex++
 	} else {
-		m.index = 0
+		m.qIndex = 0
 	}
 }
 
-func (m *model) Prev() {
-	if m.index > 0 {
-		m.index--
+func (m *model) PrevQuestion() {
+	if m.qIndex > 0 {
+		m.qIndex--
 	} else {
-		m.index = len(m.questions) - 1
+		m.qIndex = len(m.questions) - 1
 	}
 }
 
 func (m *model) SetAnswerValue() {
-	currentAnswer := m.questions[m.index].Prompt.Input
+	currentAnswer := m.questions[m.qIndex].Prompt.Input
 
 	if currentAnswer != "" {
 		m.answerField.SetValue(currentAnswer)
@@ -185,7 +203,7 @@ func NewDefaultModel(questions []Question) *model {
 	answerField.Focus()
 
 	return &model{
-		index:       0,
+		qIndex:      0,
 		questions:   questions,
 		answerField: answerField,
 		styles:      mainStyle,

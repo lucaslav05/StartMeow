@@ -7,15 +7,15 @@ type Question struct {
 	OptionIndex int
 }
 
-func (q *Question) Next() {
-	if q.OptionIndex < len(q.Prompt.Question)-1 {
+func (q *Question) NextOption() {
+	if q.OptionIndex < len(q.Prompt.Options)-1 {
 		q.OptionIndex++
 	} else {
 		q.OptionIndex = 0
 	}
 }
 
-func (q *Question) Prev() {
+func (q *Question) PrevOption() {
 	if q.OptionIndex > 0 {
 		q.OptionIndex--
 	} else {
