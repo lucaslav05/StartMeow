@@ -29,13 +29,12 @@ func main() {
 	testProj := internal.Project{
 		ProjType:   internal.WebApp,
 		FrontFrame: internal.React,
-		BackFrame:  internal.ReactRouter,
+		BackFrame:  internal.NextJS,
 		FrontLang:  internal.Javascript,
 		BackLang:   internal.Typescript,
 		Ui:         internal.Download,
 		Database:   internal.MongoDB,
 		ProjName:   "test-project",
-		FilePath:   "HEllo!",
 	}
 
 	internal.BuildProject(&testProj)

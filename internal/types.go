@@ -8,7 +8,7 @@ const (
 	Store UserInterface = iota
 	Download
 	Blog
-	Empty
+	Landing
 )
 
 type ProjectType int
@@ -66,7 +66,6 @@ type Project struct {
 	Ui         UserInterface
 	Database   Database
 	ProjName   string
-	FilePath   string
 }
 
 type Prompt struct {
