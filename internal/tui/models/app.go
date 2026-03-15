@@ -26,6 +26,7 @@ type model struct {
 	help        help.Model
 	keys        help.KeyMap
 	queue       internal.Queue
+	pStruct     internal.Project
 }
 
 func (m model) Init() tea.Cmd {
@@ -58,7 +59,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			answerPrompt := internal.Prompt{Question: currentQ.Prompt.Question,
 				PromptType: currentQ.Prompt.PromptType,
 				Input:      currentQ.Prompt.Options[currentQ.OptionIndex]}
-			nextP := internal.StateRouter(&m.queue, answerPrompt)
+			nextP := internal.StateRouter(&m.queue, answerPrompt, &m.pStruct)
 
 			// add next question it to list
 			nextQ := NewQuestionFromPrompt(nextP)
@@ -270,5 +271,6 @@ func NewDefaultModel(questions []Question, queue internal.Queue) *model {
 		keys:        keys,
 		help:        help.New(),
 		queue:       queue,
+		pStruct:     internal.Project{},
 	}
 }
