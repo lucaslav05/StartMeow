@@ -18,13 +18,12 @@ func main() {
 
 	defer f.Close()
 
-	questions := []models.Question{
-		models.NewQuestion("Select a language", internal.Select, []string{"C", "C#", "Java", "JavaScript"}),
-		models.NewQuestion("Insert project name", internal.Field, []string{}),
-		models.NewQuestion("Verify project structure", internal.Info, []string{}),
-	}
+	q := internal.InitPrompts()
+	initialP := q.Dequeue()
 
-	m := models.NewDefaultModel(questions)
+	questions := []models.Question{models.NewQuestion(initialP.Question, initialP.PromptType, initialP.Options)}
+
+	m := models.NewDefaultModel(questions, q)
 
 	p := tea.NewProgram(m)
 	if _, err := p.Run(); err != nil {

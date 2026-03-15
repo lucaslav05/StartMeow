@@ -1,9 +1,5 @@
 package internal
 
-import (
-	"fmt"
-)
-
 type Queue struct {
 	List []Prompt
 }
@@ -16,19 +12,19 @@ func InitQueue() Queue {
 }
 
 func (q *Queue) Enqueue(item Prompt) {
-	// fmt.Println("enqueue called: " + item.Question)
+	// // fmt.Println("enqueue called: " + item.Question)
 
 	q.List = append(q.List, item)
 
-	fmt.Println("WHATS IN")
-	fmt.Println(q.List)
+	// fmt.Println("WHATS IN")
+	// fmt.Println(q.List)
 }
 
 func (q *Queue) Dequeue() Prompt {
-	fmt.Print("dequeue called: ")
+	// fmt.Print("dequeue called: ")
 
 	if len(q.List) == 0 {
-		fmt.Println("Queue Empty")
+		// fmt.Println("Queue Empty")
 		return Prompt{
 			Question: "ERROR, QUEUE EMPTY",
 		}
@@ -39,7 +35,7 @@ func (q *Queue) Dequeue() Prompt {
 	q.remove()
 	q.resize()
 
-	fmt.Println(item.Question)
+	// fmt.Println(item.Question)
 	return item
 }
 

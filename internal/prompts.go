@@ -1,54 +1,45 @@
 package internal
 
-import "fmt"
+import "log"
 
 func InitPrompts() Queue {
 	q := InitQueue()
-	q.Enqueue(AppType)
+	q.Enqueue(FrontendFrameworkType)
 
-	UpdateProjectState(WebappState)
-	// fmt.Println("Initiating the prompts proj stat: " + projectState.prompts[0].Question)
-	fmt.Println("INIT OF QEUUE")
-	fmt.Println(q)
+	UpdateProjectState(FrontendState)
+	// // fmt.Println("Initiating the prompts proj stat: " + projectState.prompts[0].Question)
+	// fmt.Println("INIT OF QEUUE")
+	// fmt.Println(q)
 	return q
 }
 
 func StateRouter(promptqueue *Queue, answer Prompt) Prompt {
 	// first split decision (frontend into react or null)
-
+	log.Println(projectState.prompts[0].Question)
 	// decided to compare questions because they are unique (pray to God)
-	if answer.Input == "React" && projectState.prompts[0].Question == "Pick an Application" {
-		fmt.Println("Case 1")
+	if answer.Input == "yes" && answer.Question == FrontendFrameworkType.Question {
+		// fmt.Println("Case 1")
 		promptqueue.Enqueue(BackendFrameworkReact)
 		promptqueue.Enqueue(StartingUI)
 		promptqueue.Enqueue(WhichDB)
-		UpdateProjectState(WhichDBState)
-		fmt.Println("End of case 1")
+		// UpdateProjectState(WhichDBState)
+		// fmt.Println("End of case 1")
 		//end of config section
-	}
-
-	// the no react route
-	if answer.Input == "no" && projectState.prompts[0].Question == "Choose a backend framework" {
-		fmt.Println("Case 2")
+	} else if answer.Input == "no" && answer.Question == FrontendFrameworkType.Question { // the no react route
+		// fmt.Println("Case 2")
 		promptqueue.Enqueue(BackendFramework)
-	}
-
-	// no react no backend framework
-	if answer.Input == "None" && projectState.prompts[0].Question == "Choose a language for your backend" {
-		fmt.Println("Case 3")
+	} else if answer.Input == "None" && answer.Question == BackendFramework.Question { // no react no backend framework
+		log.Println("Case 3")
 		promptqueue.Enqueue(WhichLanguage)
 		promptqueue.Enqueue(StartingUI)
 		promptqueue.Enqueue(WhichDB)
 		//end of config section
 	} else {
-		fmt.Println("Case 4")
-		promptqueue.Enqueue(StartingUI)
-		promptqueue.Enqueue(WhichDB)
-		//end of config section
+		promptqueue.Enqueue(EndingState)
 	}
 
 	p := promptqueue.Dequeue()
-	fmt.Println(promptqueue.List)
+	// fmt.Println(promptqueue.List)
 	return p
 }
 
@@ -134,5 +125,14 @@ var WhichDB = Prompt{
 		"MongoDB",
 		"SQLite",
 		"None",
+	},
+}
+
+var EndingState = Prompt{
+	Question:   "Confirm project configuration",
+	PromptType: Info,
+	Options: []string{
+		"Y",
+		"n",
 	},
 }

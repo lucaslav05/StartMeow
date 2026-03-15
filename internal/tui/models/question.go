@@ -32,3 +32,7 @@ func NewQuestion(question string, qtype internal.PromptType, options []string) Q
 
 	return Question{Prompt: p, OptionIndex: 0}
 }
+
+func NewQuestionFromPrompt(p internal.Prompt) Question {
+	return Question{Prompt: p, OptionIndex: 0}
+}
