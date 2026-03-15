@@ -5,6 +5,10 @@ type state struct {
 	prompts []Prompt
 }
 
+func UpdateProjectState(newState state) {
+	projectState = newState
+}
+
 // Comparison state
 var projectState = state{
 	prompts: []Prompt{},
@@ -23,60 +27,62 @@ var FrontendState = state{
 	prompts: []Prompt{FrontendFrameworkType},
 	answers: map[string]state{
 		"yes": BackendFrameworkReactState,
-		"no": BackendFramework,
-	}
+		"no":  BackendFrameworkState,
+	},
 }
 
 var BackendFrameworkReactState = state{
 	prompts: []Prompt{BackendFrameworkReact},
 	answers: map[string]state{
-		"React": StarterUIState,
-		"Nextjs": StarterUIState,
+		"React":   StarterUIState,
+		"Nextjs":  StarterUIState,
 		"Express": StarterUIState,
-	}
+	},
 }
 
 var StarterUIState = state{
-	prompts: []Prompt{StartingUI}
+	prompts: []Prompt{StartingUI},
 	answers: map[string]state{
-		"Store": WhichDBState,
+		"Store":    WhichDBState,
 		"Download": WhichDBState,
-		"Blog": WhichDBState,
-		"Empty": WhichDBState,
-	}
+		"Blog":     WhichDBState,
+		"Empty":    WhichDBState,
+	},
 }
 
 // start of 'no' frontend framework path
 var BackendFrameworkState = state{
 	prompts: []Prompt{WhichLanguage, StartingUI},
 	answers: map[string]state{
-		"Node": StarterUIState,
+		"Node":    StarterUIState,
 		"Express": StarterUIState,
-		"None": WhichLanguageState,
-	}
+		"None":    WhichLanguageState,
+	},
 }
 
 var WhichLanguageState = state{
 	prompts: []Prompt{WhichLanguage},
 	answers: map[string]state{
-		"c": StarterUIState,
+		"c":          StarterUIState,
 		"Javascript": StarterUIState,
 		"Typescript": StarterUIState,
-		"Go": StarterUIState,
-		"c++": StarterUIState,
-		"Java": StarterUIState,
-		"Swift": StarterUIState,
-		"Kotlin"; StarterUIState,
-		"CSharp" StarterUIState,
-		"Jsp" StarterUIState,
+		"Go":         StarterUIState,
+		"c++":        StarterUIState,
+		"Java":       StarterUIState,
+		"Swift":      StarterUIState,
+		"Kotlin":     StarterUIState,
+		"CSharp":     StarterUIState,
+		"Jsp":        StarterUIState,
 	},
 }
 
 var WhichDBState = state{
 	prompts: []Prompt{WhichDB},
-	answer: map[string]state{
-		"MongoDB": nil,
-		"Firebase": nil,
-		"SQLite": nil,
-	}
+	answers: map[string]state{
+		"MongoDB":  emptyState,
+		"Firebase": emptyState,
+		"SQLite":   emptyState,
+	},
 }
+
+var emptyState = state{}

@@ -1,15 +1,55 @@
 package internal
 
+import "fmt"
+
 func InitPrompts() Queue {
-	q := InitPrompts()
+	q := InitQueue()
 	q.Enqueue(AppType)
 
+	UpdateProjectState(WebappState)
+	// fmt.Println("Initiating the prompts proj stat: " + projectState.prompts[0].Question)
+	fmt.Println("INIT OF QEUUE")
+	fmt.Println(q)
 	return q
 }
 
 func StateRouter(promptqueue *Queue, answer Prompt) Prompt {
+	// first split decision (frontend into react or null)
 
-	return promptqueue.Dequeue()
+	// decided to compare questions because they are unique (pray to God)
+	if answer.Input == "React" && projectState.prompts[0].Question == "Pick an Application" {
+		fmt.Println("Case 1")
+		promptqueue.Enqueue(BackendFrameworkReact)
+		promptqueue.Enqueue(StartingUI)
+		promptqueue.Enqueue(WhichDB)
+		UpdateProjectState(WhichDBState)
+		fmt.Println("End of case 1")
+		//end of config section
+	}
+
+	// the no react route
+	if answer.Input == "no" && projectState.prompts[0].Question == FrontendState.prompts[0].Question {
+		fmt.Println("Case 2")
+		promptqueue.Enqueue(BackendFramework)
+	}
+
+	// no react no backend framework
+	if answer.Input == "None" && projectState.prompts[0].Question == BackendFrameworkState.prompts[0].Question {
+		fmt.Println("Case 3")
+		promptqueue.Enqueue(WhichLanguage)
+		promptqueue.Enqueue(StartingUI)
+		promptqueue.Enqueue(WhichDB)
+		//end of config section
+	} else {
+		fmt.Println("Case 4")
+		promptqueue.Enqueue(StartingUI)
+		promptqueue.Enqueue(WhichDB)
+		//end of config section
+	}
+
+	p := promptqueue.Dequeue()
+	fmt.Println(promptqueue.List)
+	return p
 }
 
 // first question
@@ -88,7 +128,7 @@ var StartingUI = Prompt{
 
 // this comes after starting UI prompt
 var WhichDB = Prompt{
-	Question:   "Pick a starting UI",
+	Question:   "end of cycle into new section",
 	PromptType: Select,
 	Options: []string{
 		"MongoDB",

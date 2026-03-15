@@ -55,7 +55,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.NextQuestion()
 			currentQ.Prompt.Input = m.answerField.Value()
 			m.SetAnswerValue()
-			//CRITICAL SECTION
 			return m, nil
 
 		case "up":
