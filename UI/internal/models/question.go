@@ -1,13 +1,15 @@
 package models
 
+type QuestionType int
+
 const (
-	Select = iota
+	Select QuestionType = iota
 	Prompt
 	Verify
 )
 
 type Question struct {
-	QuestionType int
+	QuestionType QuestionType
 	Question     string
 	Options      []string
 	OptionIndex  int
