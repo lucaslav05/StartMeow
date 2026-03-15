@@ -6,11 +6,11 @@ func buildProject(proj *Project) {
 	case WebApp:
 		buildWebApp(proj)
 	case ClientServer:
-
+		buildClientServer(proj)
 	case Terminal:
-
+		buildTerminal(proj)
 	case Mobile:
-
+		buildMobile(proj)
 	default:
 
 	}
@@ -29,6 +29,6 @@ func buildTerminal(proj *Project) {
 
 }
 
-func build(proj *Project) {
+func buildMobile(proj *Project) {
 
 }
