@@ -1,5 +1,7 @@
 # StartMeow
 
+Project Starter with a Terminal UI Made For BCIT HackTheBreak 2026.
+
 ## Quick Start
 
 Download the latest executable directly from the [GitHub Releases](https://github.com/lucaslav05/StartMeow/releases) page, move it to your project folder and run it:
